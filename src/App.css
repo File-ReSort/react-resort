@@ -1,3 +1,8 @@
+.App {
+	height: 100vh;
+	overflow-y: hidden;
+}
+
 .App-top {
 	align-items: baseline;
 	border-bottom: 1px solid black;
@@ -6,12 +11,19 @@
 	padding-left: 40px;
 }
 
+.Doc-options {
+	border-left: 1px solid black;
+	padding-top: 20px;
+	padding-right: 40px;
+	padding-left: 40px;
+}
+
 .Document {
 	padding-top: 20px;
 	padding-right: 50px;
+	padding-left: 50px;
 	overflow-y: scroll;
-	width: 70%;
-	border-right: 1px solid black;
+	width: 60%;
 }
 
 .entity {
@@ -39,7 +51,9 @@ h1 {
 }
 
 main {
-	padding: 0px 50px;
+	height: 100%;
+	display: flex;
+	padding: 0px;
 }
 
 ul {
