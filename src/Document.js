@@ -3,7 +3,11 @@
 export default function Document() {
 	return (
         <div className="Document">
-            <div class="entities">1. 
+            <div className="Controls">
+                <button>New Rule</button>
+                <button>Delete</button>
+            </div>
+            <div className="Entities">1. 
                 <mark class="entity">
                     Office of the Comptroller of the Currency
                     <span>LEGAL ORGANIZATION</span>

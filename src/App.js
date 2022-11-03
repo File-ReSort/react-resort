@@ -1,5 +1,5 @@
 import logo from './logo.png';
-import Document from './Document.js';
+import Annotator from './Annotator.js';
 import './App.css';
 
 const App = () => {
@@ -51,18 +51,22 @@ const App = () => {
 				</nav>
 			</div>
 			<main>
-				<Document />
+				<div className="Container">
+					<Annotator />
+				</div>
 				<div className="Doc-options">
 					<div className="Tags-container">
 						<h3>Entities</h3>
-						{tags.map((tag) => {
-							return (
-								<div key={tag.id}>
-									{tag.text}
-									{tag.ent_type_}
-								</div>
-							);
-						})}
+						<table className="Tags-table">
+							{tags.map((tag) => {
+								return (
+									<tr key={tag.id}>
+										<td>{tag.text}</td>
+										<td>{tag.ent_type_}</td>
+									</tr>
+								);
+							})}
+						</table>
 					</div>
 					<div>
 					<h3>Rules</h3>
