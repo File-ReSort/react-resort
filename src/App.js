@@ -1,6 +1,7 @@
 import logo from './logo.png';
-import Annotator from './components/Annotator.js';
-import './App.css';
+//import Annotator from './components/Annotator.js';
+import DocEditor from './components/DocEditor';
+import './styles/App.css';
 
 /*
 {tags.map((tag) => {
@@ -27,9 +28,7 @@ const App = () => {
 					</ul>
 				</nav>
 			</div>
-			<main>
-				<Annotator />
-			</main>
+			<DocEditor />
 		</div>
 	);
 };

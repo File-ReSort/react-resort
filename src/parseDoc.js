@@ -1,4 +1,5 @@
-<div class="entities" style="line-height: 2.5; direction: ltr">ยง1. 
+const raw = 
+`<div class="entities" style="line-height: 2.5; direction: ltr">ยง1. 
     <mark class="entity" style="background: #ddd; padding: 0.45em 0.6em; margin: 0 0.25em; line-height: 1; border-radius: 0.35em;">
         Office of the Comptroller of the Currency
         <span style="font-size: 0.8em; font-weight: bold; line-height: 1; border-radius: 0.35em; vertical-align: middle; margin-left: 0.5rem">LEGAL ORGANIZATION</span>
@@ -73,4 +74,4 @@
         Secretary of the Treasury
         <span style="font-size: 0.8em; font-weight: bold; line-height: 1; border-radius: 0.35em; vertical-align: middle; margin-left: 0.5rem">PERSON</span>
     </mark>
-</div>
+</div>`;

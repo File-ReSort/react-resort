@@ -1,4 +1,3 @@
-import { TokenAnnotator, TextAnnotator } from 'react-text-annotate';
 import { Dropdown } from 'semantic-ui-react';
 import React from 'react';
 import './Annotator.css';
