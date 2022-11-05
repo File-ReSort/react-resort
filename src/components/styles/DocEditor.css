@@ -1,0 +1,21 @@
+.Text-container {
+	flex: 1;
+	overflow-y: scroll;
+	white-space: pre-line;
+	padding: 20px;
+}
+
+.Doc-options {
+	border-left: 1px solid black;
+	padding: 20px 30px 0 30px;
+	width: 440px;
+}
+
+.DocEditor {
+	height: 92%;
+	display: flex;
+}
+
+table {
+    width: 100%;
+}
