@@ -1,41 +1,18 @@
 import logo from './logo.png';
-import Annotator from './Annotator.js';
+import Annotator from './components/Annotator.js';
 import './App.css';
 
+/*
+{tags.map((tag) => {
+								return (
+									<tr key={tag.id}>
+										<td>{tag.text}</td>
+										<td>{tag.ent_type_}</td>
+									</tr>
+								);
+							})}
+*/
 const App = () => {
-	/*
-	const WBK = require('wikibase-sdk');
-	const wdk = WBK({
-	instance: 'https://www.wikidata.org',
-	sparqlEndpoint: 'https://query.wikidata.org/sparql'
-	});
-
-	const url = wdk.searchEntities('Department of the Treasury');
-	console.log(url);
-	*/
-
-	const tags = [
-		{
-			"id": 1,
-			"text": "Office of the Comptroller of the Currency",
-			"ent_type_": "ORG"
-		},
-		{
-			"id": 2,
-			"text": "Department of the Treasury",
-			"ent_type_": "ORG"
-		},
-		{
-			"id": 3,
-			"text": "Comptroller of the Currency",
-			"ent_type_": "PERSON"
-		},
-		{
-			"id": 4,
-			"text": "Secretary of the Treasury",
-			"ent_type_": "PERSON"
-		}
-	];
 
 	return (
 		<div className="App">
@@ -51,27 +28,7 @@ const App = () => {
 				</nav>
 			</div>
 			<main>
-				<div className="Container">
-					<Annotator />
-				</div>
-				<div className="Doc-options">
-					<div className="Tags-container">
-						<h3>Entities</h3>
-						<table className="Tags-table">
-							{tags.map((tag) => {
-								return (
-									<tr key={tag.id}>
-										<td>{tag.text}</td>
-										<td>{tag.ent_type_}</td>
-									</tr>
-								);
-							})}
-						</table>
-					</div>
-					<div>
-					<h3>Rules</h3>
-					</div>
-				</div>
+				<Annotator />
 			</main>
 		</div>
 	);

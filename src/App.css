@@ -1,7 +1,9 @@
 .App {
+	font-size: 16px;
 	height: 100vh;
 	overflow: hidden;
 }
+
 .App-top {
 	align-items: baseline;
 	border-bottom: 1px solid black;
@@ -9,31 +11,11 @@
 	padding-left: 40px;
 }
 
-.Container {
-	flex: 1;
-	overflow-y: scroll;
-}
-
-.Doc-options {
-	border-left: 1px solid black;
-	padding: 20px 40px 0 40px;
-	width: 440px;
-}
-
-.Tags-table {
-	width: 100%;
-}
-
 h1 {
 	display: inline;
 	float: left;
 	margin-right: 100px;
 	margin-left: 40px;
-}
-
-main {
-	height: 90%;
-	display: flex;
 }
 
 ul {
