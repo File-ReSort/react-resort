@@ -2,20 +2,20 @@
 	font-size: 16px;
 	height: 100vh;
 	overflow: hidden;
+	max-width: 1600px;
+	margin: auto;
+	background-color: #fff;
 }
 
 .App-top {
-	align-items: baseline;
-	border-bottom: 1px solid black;
+	align-items: center;
+	border-bottom: 1px solid rgba(0, 0, 0, 0);
 	display: flex;
 	padding-left: 40px;
 }
-
-h1 {
-	display: inline;
-	float: left;
-	margin-right: 100px;
-	margin-left: 40px;
+.DocEditor {
+	background-color:#a1a9a5;
+	border-top: 2px solid #2c4366;
 }
 
 ul {
@@ -48,7 +48,6 @@ li a:active {
 }
 
 img {
-	align-self: center;
 	width: 52px;
 	height: 50px;
 }
