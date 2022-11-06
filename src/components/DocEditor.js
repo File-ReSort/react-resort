@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Table } from "@mantine/core";
+import { Button, Checkbox, Flex, Table } from "@mantine/core";
 import nlp from 'compromise';
 import './styles/DocEditor.css';
 
@@ -49,42 +49,25 @@ class DocEditor extends React.Component {
             words: this.getWords(),
             generated: '',
             labels: [
-				{
-					start: 4,
-					end: 8,
-					tag: "PERSON",
-					tokens: [
-						"Comptroller", "of", "the", "Currency"
-					],
-					color: "#84d2ff"
-				},
-				{
-					start: 9,
-					end: 16,
-					tag: "ORG",
-					tokens: [
-						"Office", "of", "the", "Comptroller", "of", "the", "Currency"
-					],
-					color: "#00ffa2"
-				},
-				{
-					start: 22,
-					end: 26,
-					tag: "ORG",
-					tokens: [
-						"Department", "of", "the", "Treasury"
-					],
-					color: "#00ffa2"
-				},
-				{
-					start: 130,
-					end: 135,
-					tokens: [
-						"The", "Secretary", "of", "the", "Treasury"
-					],
-					tag: "PERSON"
-				}
-			]
+                {
+                    IDs: [],
+                    tag: "PERSON",
+                    tokens: [
+                        "Comptroller", "of", "the", "Currency"
+                    ],
+                    color: "#84d2ff"
+                },
+                {
+                    IDs: [],
+                    tag: "ORG",
+                    tokens: [
+                        "Office", "of", "the", "Comptroller", "of", "the", "Currency"
+                    ],
+                    color: "#00ffa2"
+                }
+            ],
+            activeLabel: "ORG",
+            activeTagColor: "#FFCFD2"
         }
 
         this.getWords = this.getWords.bind(this);
@@ -132,11 +115,50 @@ class DocEditor extends React.Component {
     }
 
     handleSelect() {
-        let selected = window.getSelection();
-        let index = selected.anchorNode.parentElement.id;
+        let selected = document.getSelection();
+        console.log(selected);
 
-        if (selected && index) {
-            this.state.words[index].term.tags.push("ORG");
+        let startNode = selected.anchorNode;
+        let endNode = selected.focusNode;
+
+        let j = 0;
+
+        if (((startNode.data !== " ") || (endNode.data !== " ")) && !(selected.type === "Caret")) {
+            let startIndex, endIndex, range = 0;
+            let savedTokens = [];
+            let savedIDs = [];
+
+            if (startNode.data === " ") {
+                startIndex = parseInt(startNode.previousSibling.stateNode.id) + 1;
+            } else if (endNode.data === " ") {
+                endIndex = parseInt(endNode.previousSibling.id);
+            } else {
+                startIndex = parseInt(startNode.parentElement.id);
+                endIndex = parseInt(endNode.parentElement.id);
+            }
+
+            range = endIndex - startIndex;
+            console.log(startIndex + " " + endIndex + " " + range);
+
+            if (range === 0) {
+                this.state.words[startIndex].term.tags.push(this.state.activeLabel);
+                savedTokens.push(this.state.words[startIndex].term.text);
+            } else if (range >= 1) {
+                for (j = 0; j <= range; j++) {
+                    let k = startIndex + j;
+                    this.state.words[k].term.tags.push(this.state.activeLabel);
+                    savedTokens.push(this.state.words[k].term.text);
+                    savedIDs.push(k);
+                }
+            }
+
+            this.state.labels.push({
+                tag: this.state.activeLabel,
+                tokens: savedTokens,
+                IDs: savedIDs,
+                color: this.state.activeTagColor
+            });
+
             this.updateTags();
         }
     }
@@ -144,6 +166,7 @@ class DocEditor extends React.Component {
     table() {
         const rows = this.state.labels.map((label) => (
             <tr key={label.tokens.join(" ")}>
+                <td><Checkbox /></td>
                 <td>{label.tag}</td>
                 <td>{label.tokens.join(" ")}</td>
             </tr>
@@ -153,7 +176,10 @@ class DocEditor extends React.Component {
             <Table>
                 <thead>
                     <tr>
-                        <th>Type</th>
+                        <th style={{ width: 40 }}>
+                            <Checkbox />
+                        </th>
+                        <th>Tag</th>
                         <th>Text</th>
                     </tr>
                 </thead>
@@ -171,8 +197,10 @@ class DocEditor extends React.Component {
     render() {
         return (
             <div className="DocEditor">
-                <div className="Text-container" onMouseUp={this.handleSelect}>
-                    {this.state.generated}
+                <div className="Doc-container">
+                    <div className="Text-container" onMouseUp={this.handleSelect}>
+                        {this.state.generated}
+                    </div>
                 </div>
                 <div className="Doc-options">
                     <div>
@@ -184,7 +212,7 @@ class DocEditor extends React.Component {
                             {this.table()}
                         </div>
                     </div>
-                    <Button variant="gradient" gradient={{ from: 'teal', to: 'lime', deg: 105 }}>Lime green</Button>
+                    <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         );
