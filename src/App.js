@@ -1,22 +1,12 @@
 import logo from './logo.png';
-//import Annotator from './components/Annotator.js';
+import { MantineProvider } from '@mantine/core';
 import DocEditor from './components/DocEditor';
 import './styles/App.css';
 
-/*
-{tags.map((tag) => {
-								return (
-									<tr key={tag.id}>
-										<td>{tag.text}</td>
-										<td>{tag.ent_type_}</td>
-									</tr>
-								);
-							})}
-*/
 const App = () => {
-
 	return (
 		<div className="App">
+			<MantineProvider withGlobalStyles withNormalizeCSS>
 			<div className="App-top">
 				<img src={logo} className="App-logo" alt="logo" />
 				<h1>File ReSort</h1>
@@ -29,6 +19,7 @@ const App = () => {
 				</nav>
 			</div>
 			<DocEditor />
+			</MantineProvider>
 		</div>
 	);
 };

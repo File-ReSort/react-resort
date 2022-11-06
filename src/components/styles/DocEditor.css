@@ -16,6 +16,9 @@
 	display: flex;
 }
 
+.Red {
+	color: red;
+}
 table {
     width: 100%;
 }
