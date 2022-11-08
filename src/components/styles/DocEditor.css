@@ -9,7 +9,10 @@
 .Doc-container {
 	flex: 1;
 	overflow-y: scroll;
+	background-color:#a1a9a5;
+	height: 87vh;
 }
+
 .Doc-options {
 	background-color:#fff;
 	border-left: 2px solid #2c4366;
@@ -17,11 +20,7 @@
 	width: 480px;
 }
 
-.DocEditor {
-	height: 92%;
-	display: flex;
-}
-
-table {
-    width: 100%;
+.Tags-container {
+	height: 500px;
+	overflow-y: scroll;
 }

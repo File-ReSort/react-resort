@@ -1,5 +1,5 @@
 import logo from './logo.png';
-import { MantineProvider, Anchor, Breadcrumbs, Container, Divider, Flex, Group, Stack, Stepper } from '@mantine/core';
+import { MantineProvider, Anchor, Breadcrumbs, Flex, Stepper } from '@mantine/core';
 import DocEditor from './components/DocEditor';
 import './styles/App.css';
 
@@ -25,7 +25,9 @@ const App = () => {
 					>
 					<Breadcrumbs py={6}>{items}</Breadcrumbs>
 				</Flex>
+
 				<Flex
+					className="App-top"
 					justify="center"
 					align="center"
 					direction="row"
@@ -47,9 +49,8 @@ const App = () => {
 						<Stepper.Step label="Step 2" description="Proofread and Edit" />
 						<Stepper.Step label="Step 3" description="Finalize" />
 					</Stepper>
-					
-						
 				</Flex>
+
 				<DocEditor />
 			</MantineProvider>
 		</div>
