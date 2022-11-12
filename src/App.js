@@ -1,6 +1,6 @@
 import logo from './logo.png';
 import { MantineProvider, Anchor, Breadcrumbs, Flex, Stepper } from '@mantine/core';
-import DocEditor from './components/DocEditor';
+//import DocEditor from './components/DocEditor';
 import './styles/App.css';
 
 const items = [
@@ -51,7 +51,7 @@ const App = () => {
 					</Stepper>
 				</Flex>
 
-				<DocEditor />
+
 			</MantineProvider>
 		</div>
 	);
