@@ -12,7 +12,7 @@ import {
 import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './slate-components'
 
-const initialValue = [
+/* const initialValue = [
   {
     type: 'paragraph',
     children: [
@@ -36,7 +36,9 @@ const initialValue = [
     ],
   }
 ]
-const InlinesExample = () => {
+*/
+
+const InlinesExample = ({initialValue}) => {
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
     []
