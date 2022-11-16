@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import DocEditor from '../components/DocEditor';
 import { MantineProvider, Anchor, Breadcrumbs, Container, Flex, Stepper } from '@mantine/core';
@@ -34,7 +33,7 @@ const Home = () => {
                             gap={80}
                         >
                             <Flex align="center" gap="lg" px={40}>
-                                <Image src="logo.png" alt="logo" width="60" height="58" />
+                                <img src="logo.png" alt="logo" width="60" height="58" />
                                 <h1 className={styles.title}>File ReSort</h1>
                             </Flex>
 
