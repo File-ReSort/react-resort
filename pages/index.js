@@ -19,7 +19,7 @@ const Home = () => {
         <div>
             <Head>
                 <title>File ReSort</title>
-                <link rel="icon" href="/favicon.ico" />
+                <link rel="icon" href="favicon.ico" />
             </Head>
 
             <MantineProvider>
@@ -34,7 +34,7 @@ const Home = () => {
                             gap={80}
                         >
                             <Flex align="center" gap="lg" px={40}>
-                                <Image src="/logo.png" alt="logo" width="60" height="58" />
+                                <Image src="logo.png" alt="logo" width="60" height="58" />
                                 <h1 className={styles.title}>File ReSort</h1>
                             </Flex>
 
