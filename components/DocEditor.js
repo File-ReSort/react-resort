@@ -166,7 +166,6 @@ const blocks = out.map(item => {
 
     return block;
 });
-console.log(blocks);
 
 const DocEditor = () => {
     return (

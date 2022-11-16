@@ -17,3 +17,10 @@ body {
   font-weight: bold;
   font-style: normal;
 }
+
+@font-face {
+  font-family: "Wellfleet";
+  src: url('../public/fonts/Wellfleet/Wellfleet-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
