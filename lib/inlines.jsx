@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react'
+import React from 'react'
+import { useState } from 'react'
 import { css } from '@emotion/css'
 import { Editable, withReact, useSlate, useSelected } from 'slate-react'
 import * as SlateReact from 'slate-react'
@@ -12,11 +13,11 @@ import {
 import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './slate-components'
 
-const InlinesExample = ({initialValue}) => {
-  const editor = useMemo(
-    () => withInlines(withHistory(withReact(createEditor()))),
-    []
-  )
+const InlinesExample = ({ initialValue }) => {
+  
+  const [editor] = useState(
+    () => withInlines(withHistory(withReact(createEditor())))
+  );
 
   const onKeyDown = event => {
     const { selection } = editor
@@ -43,14 +44,27 @@ const InlinesExample = ({initialValue}) => {
   }
 
   return (
-    <SlateReact.Slate editor={editor} value={initialValue}>
+    <SlateReact.Slate 
+      editor={editor}
+      value={initialValue}
+      onChange={value => {
+        const astChange = editor.operations.some(
+          op => 'set_selection' !== op.type
+        )
+        if (astChange) {
+          const content = JSON.stringify(value);
+          localStorage.setItem('content', content);
+          console.log(value);
+        }
+      }}
+    >
       <Toolbar style={{
-        "background-color": "#fff",
-        "border-bottom": "2px solid #2c4366",
-        "margin-right": "0px",
-        "padding-top": "16px",
-        "text-align": "center"
-        }}>
+        "backgroundColor": "#fff",
+        "borderBottom": "2px solid #2c4366",
+        "marginRight": "0px",
+        "paddingTop": "16px",
+        "textAlign": "center"
+      }}>
         <AddLinkButton />
         <RemoveLinkButton />
         <ToggleEditableButtonButton />
@@ -61,13 +75,13 @@ const InlinesExample = ({initialValue}) => {
         placeholder="Enter some text..."
         onKeyDown={onKeyDown}
         style={{
-          "background-color": "#fff",
+          "backgroundColor": "#fff",
           "margin": "auto",
-          "max-width": "800px",
+          "maxWidth": "800px",
           "padding": "20px 40px",
           "lineHeight": "1.4em",
           "boxShadow": "2px 2px 2px #dee2e6"
-          }}
+        }}
       />
     </SlateReact.Slate>
   )
@@ -234,11 +248,11 @@ const EditableButtonComponent = ({ attributes, children }) => {
       // Margin is necessary to clearly show the cursor adjacent to the button
       className={css`
         margin: 0 0.1em;
-        background-color: #e7f5ff;
+        backgroundColor: #e7f5ff;
         padding: 2px 6px;
         border: 1px solid #74c0fc;
-        font-size: 0.9em;
-        line-height: 0.9em;
+        fontSize: 0.9em;
+        lineHeight: 0.9em;
       `}
     >
       <InlineChromiumBugfix />
