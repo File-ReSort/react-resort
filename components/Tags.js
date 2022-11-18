@@ -1,16 +1,16 @@
 import { Checkbox, Table } from "@mantine/core";
 import React from "react";
 
-const Tags = ({obj}) => {
+export default function Tags({obj}) {
+    let i = -1;
     const Rows = () => {
-        let i = -1;
         return(
-            obj.forEach(block =>
+            obj.map(block =>
             block.children?.map(child => {
                 if (child.children) {
                     i++;
                     console.log(child.children[0].text);
-                    const txt = JSON.stringify(child.children[0].text);
+                    const txt = child.children[0].text;
     
                     return (
                         <tr key={i}>
@@ -19,21 +19,12 @@ const Tags = ({obj}) => {
                             <td>{txt}</td>
                         </tr>
                     );
-                } else {
-                    return (
-                        <tr key={i}>
-                            <td></td>
-                            <td></td>
-                            <td>no data</td>
-                        </tr>
-                    )
                 }
             })
         ));
     }
     
     return (
-        <div>
         <Table>
             <thead>
                 <tr>
@@ -48,7 +39,5 @@ const Tags = ({obj}) => {
                 <Rows />
             </tbody>
         </Table>
-        </div>
     )
 }
-export default Tags;

@@ -132,28 +132,16 @@ const spacyOut = {
     ]
 };
 
-class DocEditor extends React.Component {
-    constructor(props) {
-        super(props);
-        this.saveTags = this.saveTags.bind(this);
+export default function DocEditor() {
+    const init = getSlateJSON(spacyOut);
+    const [data, setData] = useState(tags);
 
-        this.state = {
-            tags: [{}]
-        };
+    function handleClick() {
+        let str = localStorage.getItem('content');
+        setData(JSON.parse(str));
     }
 
-    saveTags() {
-        const str = localStorage.getItem('content');
-        const newTags = JSON.parse(str);
-        this.setState({
-            tags: newTags
-        });
-    }
-
-    render() {
-        const init = getSlateJSON(spacyOut);
-
-        return(
+    return (
         <div className={styles.editor}>
             <div className={styles.txtContainer}>
                 <div className={styles.text}>
@@ -168,13 +156,13 @@ class DocEditor extends React.Component {
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     <div className={styles.tags}>
-                        <Tags obj={this.state.tags}/>
+                        <Tags obj={data}/>
                     </div>
-                    <Button onClick={this.saveTags} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                    <Button onClick={ handleClick } variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
-        )
-    }
+    );
 }
-export default DocEditor;
+
+const tags = [{}];
