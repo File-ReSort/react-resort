@@ -1,6 +1,10 @@
-import { Button, Checkbox, Container, Flex, Table } from "@mantine/core";
+import { Button } from '@mantine/core';
+import React, { useState } from 'react';
 import InlinesExample from '../lib/inlines';
+import {getSlateJSON} from '../lib/spacy-to-slate';
+import Tags from './Tags';
 import styles from '../styles/DocEditor.module.css';
+import { render } from 'react-dom';
 
 const spacyOut = {
     "classes": [
@@ -128,51 +132,32 @@ const spacyOut = {
     ]
 };
 
-const out = spacyOut["annotations"];
-const blocks = out.map(item => {
-    const block = {
-        type: 'paragraph',
-        children: []
-    };
-    const text = item[0];
-    const entities = item[1]["entities"];
-    const len = entities.length;
+class DocEditor extends React.Component {
+    constructor(props) {
+        super(props);
+        this.saveTags = this.saveTags.bind(this);
 
-    if (len == 0) {
-        block.children.push({
-            text: text
-        });
-
-        return block;
+        this.state = {
+            tags: [{}]
+        };
     }
 
-    let start = 0;
-    let end = 0;
-
-    entities.forEach(entity => {
-        start = entity[0];
-        const between = text.slice(end, start);
-
-        block.children.push({ text: between });
-
-        end = entity[1];
-        const btnText = text.slice(start, end);
-
-        block.children.push({
-            type: 'button',
-            children: [{ text: btnText }]
+    saveTags() {
+        const str = localStorage.getItem('content');
+        const newTags = JSON.parse(str);
+        this.setState({
+            tags: newTags
         });
-    })
+    }
 
-    return block;
-});
+    render() {
+        const init = getSlateJSON(spacyOut);
 
-const DocEditor = () => {
-    return (
+        return(
         <div className={styles.editor}>
             <div className={styles.txtContainer}>
                 <div className={styles.text}>
-                    <InlinesExample initialValue={blocks} />
+                    <InlinesExample initialValue={init} />
                 </div>
             </div>
             <div className={styles.options}>
@@ -183,26 +168,13 @@ const DocEditor = () => {
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     <div className={styles.tags}>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th style={{ width: 40 }}>
-                                        <Checkbox />
-                                    </th>
-                                    <th>Tag</th>
-                                    <th>Text</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </Table>
+                        <Tags obj={this.state.tags}/>
                     </div>
-                </div>
-                <div className={styles.section}>
-                    <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                    <Button onClick={this.saveTags} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
-    );
+        )
+    }
 }
 export default DocEditor;
