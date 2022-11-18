@@ -133,6 +133,12 @@ const spacyOut = {
 
 const DocEditor = () => {
     const init = getSlateJSON(spacyOut);
+    let tags = [{}, {}];
+
+    function saveTags() {
+        const str = localStorage.getItem('content');
+        tags = JSON.parse(str);
+    }
 
     return (
         <div className={styles.editor}>
@@ -149,8 +155,9 @@ const DocEditor = () => {
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     <div className={styles.tags}>
-                        <Tags />
+                        <Tags obj={tags}/>
                     </div>
+                    <Button onClick={saveTags} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
