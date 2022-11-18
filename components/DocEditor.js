@@ -1,9 +1,10 @@
 import { Button } from '@mantine/core';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import InlinesExample from '../lib/inlines';
 import {getSlateJSON} from '../lib/spacy-to-slate';
 import Tags from './Tags';
 import styles from '../styles/DocEditor.module.css';
+import { render } from 'react-dom';
 
 const spacyOut = {
     "classes": [
@@ -131,10 +132,28 @@ const spacyOut = {
     ]
 };
 
-const DocEditor = () => {
-    const init = getSlateJSON(spacyOut);
+class DocEditor extends React.Component {
+    constructor(props) {
+        super(props);
+        this.saveTags = this.saveTags.bind(this);
 
-    return (
+        this.state = {
+            tags: [{}]
+        };
+    }
+
+    saveTags() {
+        const str = localStorage.getItem('content');
+        const newTags = JSON.parse(str);
+        this.setState({
+            tags: newTags
+        });
+    }
+
+    render() {
+        const init = getSlateJSON(spacyOut);
+
+        return(
         <div className={styles.editor}>
             <div className={styles.txtContainer}>
                 <div className={styles.text}>
@@ -149,11 +168,13 @@ const DocEditor = () => {
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     <div className={styles.tags}>
-                        <Tags />
+                        <Tags obj={this.state.tags}/>
                     </div>
+                    <Button onClick={this.saveTags} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
-    );
+        )
+    }
 }
 export default DocEditor;
