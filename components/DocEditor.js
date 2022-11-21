@@ -162,7 +162,7 @@ export default function DocEditor() {
     }
     //end Slate
     
-    function handleClick() {
+    function handleChange() {
         let str = localStorage.getItem('content');
         setData(JSON.parse(str));
     }
@@ -181,6 +181,7 @@ export default function DocEditor() {
                             if (astChange) {
                                 const content = JSON.stringify(value);
                                 localStorage.setItem('content', content);
+                                handleChange();
                                 console.log(value);
                             }
                         }}
@@ -223,7 +224,7 @@ export default function DocEditor() {
                     <div className={styles.tags}>
                         <Tags obj={data} />
                     </div>
-                    <Button onClick={handleClick} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                    <Button onClick={handleChange} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
