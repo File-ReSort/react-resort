@@ -204,7 +204,24 @@ const LinkComponent = ({ attributes, children, element }) => {
   )
 }
 
-const EditableButtonComponent = ({ attributes, children }) => {
+const EditableButtonComponent = ({ attributes, children, element }) => {
+  let color, border;
+
+  switch(element.tag) {
+    case "PERSON":
+      color = "#f4e7ff";
+      border = "#ce94ff";
+      break;
+    case "ORGANIZATION":
+      color = "#e3ecff";
+      border = "#a9c5ff";
+      break;
+    default:
+      color = "#fff";
+      border = "#fff";
+      break;
+  }
+
   return (
     /*
       Note that this is not a true button, but a span with button-like CSS.
@@ -227,6 +244,10 @@ const EditableButtonComponent = ({ attributes, children }) => {
         fontSize: 0.9em;
         lineHeight: 0.9em;
       `}
+      style={{
+        backgroundColor: color,
+        border: `1px solid ${border}`
+      }}
     >
       <InlineChromiumBugfix />
       {children}
