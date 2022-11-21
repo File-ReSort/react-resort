@@ -1,10 +1,14 @@
 import { Button } from '@mantine/core';
 import React, { useState } from 'react';
-import InlinesExample from '../lib/inlines';
-import {getSlateJSON} from '../lib/spacy-to-slate';
+import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
+import { getSlateJSON } from '../lib/spacy-to-slate';
+import { withHistory } from 'slate-history';
+import { Toolbar } from '../lib/slate-components';
+import { createEditor } from 'slate';
+import { Editable, withReact } from 'slate-react';
+import * as SlateReact from 'slate-react';
 import Tags from './Tags';
 import styles from '../styles/DocEditor.module.css';
-import { render } from 'react-dom';
 
 const spacyOut = {
     "classes": [
@@ -133,9 +137,31 @@ const spacyOut = {
 };
 
 export default function DocEditor() {
-    const init = getSlateJSON(spacyOut);
     const [data, setData] = useState(tags);
+    const [editor] = useState(
+        () => withInlines(withHistory(withReact(createEditor())))
+    );
 
+    // credit: Slate
+    const onKeyDown = event => {
+        const { selection } = editor
+
+        if (selection && Range.isCollapsed(selection)) {
+            const { nativeEvent } = event
+            if (isKeyHotkey('left', nativeEvent)) {
+                event.preventDefault()
+                Transforms.move(editor, { unit: 'offset', reverse: true })
+                return
+            }
+            if (isKeyHotkey('right', nativeEvent)) {
+                event.preventDefault()
+                Transforms.move(editor, { unit: 'offset' })
+                return
+            }
+        }
+    }
+    //end Slate
+    
     function handleClick() {
         let str = localStorage.getItem('content');
         setData(JSON.parse(str));
@@ -145,7 +171,46 @@ export default function DocEditor() {
         <div className={styles.editor}>
             <div className={styles.txtContainer}>
                 <div className={styles.text}>
-                    <InlinesExample initialValue={init} />
+                    <SlateReact.Slate
+                        editor={editor}
+                        value={data}
+                        onChange={value => {
+                            const astChange = editor.operations.some(
+                                op => 'set_selection' !== op.type
+                            )
+                            if (astChange) {
+                                const content = JSON.stringify(value);
+                                localStorage.setItem('content', content);
+                                console.log(value);
+                            }
+                        }}
+                    >
+                        <Toolbar style={{
+                            backgroundColor: "#fff",
+                            borderBottom: "2px solid #2c4366",
+                            marginRight: "0px",
+                            paddingTop: "16px",
+                            textAlign: "center"
+                        }}>
+                            <AddLinkButton />
+                            <RemoveLinkButton />
+                            <ToggleEditableButtonButton />
+                        </Toolbar>
+                        <Editable
+                            renderElement={props => <Element {...props} />}
+                            renderLeaf={props => <Text {...props} />}
+                            placeholder="Enter some text..."
+                            onKeyDown={onKeyDown}
+                            style={{
+                                backgroundColor: "#fff",
+                                margin: "auto",
+                                maxWidth: "800px",
+                                padding: "20px 40px",
+                                lineHeight: "1.4em",
+                                boxShadow: "2px 2px 2px #dee2e6"
+                            }}
+                        />
+                    </SlateReact.Slate>
                 </div>
             </div>
             <div className={styles.options}>
@@ -156,13 +221,40 @@ export default function DocEditor() {
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     <div className={styles.tags}>
-                        <Tags obj={data}/>
+                        <Tags obj={data} />
                     </div>
-                    <Button onClick={ handleClick } variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                    <Button onClick={handleClick} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
             </div>
         </div>
     );
 }
 
-const tags = [{}];
+const tags = getSlateJSON(spacyOut);
+
+const withInlines = editor => {
+    const { insertData, insertText, isInline } = editor
+  
+    editor.isInline = element =>
+      ['link', 'button'].includes(element.type) || isInline(element)
+  
+    editor.insertText = text => {
+      if (text && isUrl(text)) {
+        wrapLink(editor, text)
+      } else {
+        insertText(text)
+      }
+    }
+  
+    editor.insertData = data => {
+      const text = data.getData('text/plain')
+  
+      if (text && isUrl(text)) {
+        wrapLink(editor, text)
+      } else {
+        insertData(data)
+      }
+    }
+  
+    return editor
+  }
