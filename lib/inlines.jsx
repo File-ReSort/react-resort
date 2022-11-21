@@ -205,6 +205,7 @@ const LinkComponent = ({ attributes, children, element }) => {
 }
 
 const EditableButtonComponent = ({ attributes, children, element }) => {
+  const val = element.value;
   let color, border;
 
   switch(element.tag) {
@@ -234,6 +235,7 @@ const EditableButtonComponent = ({ attributes, children, element }) => {
     */
     <span
       {...attributes}
+      value={val}
       onClick={ev => ev.preventDefault()}
       // Margin is necessary to clearly show the cursor adjacent to the button
       className={css`
