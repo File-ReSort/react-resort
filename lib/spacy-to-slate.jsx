@@ -30,6 +30,7 @@ export function getSlateJSON(spacy) {
             const btnText = text.slice(start, end);
             block.children.push({
                 type: 'button',
+                tag: entity[2],
                 children: [{ text: btnText }]
             });
         })

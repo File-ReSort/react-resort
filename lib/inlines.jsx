@@ -1,18 +1,17 @@
 import React from 'react'
-import { useState } from 'react'
+//import { useState } from 'react'
 import { css } from '@emotion/css'
-import { Editable, withReact, useSlate, useSelected } from 'slate-react'
-import * as SlateReact from 'slate-react'
+import { useSlate, useSelected } from 'slate-react'
+//import * as SlateReact from 'slate-react'
 import {
   Transforms,
   Editor,
   Range,
-  createEditor,
   Element as SlateElement
 } from 'slate'
-import { withHistory } from 'slate-history'
-import { Button, Icon, Toolbar } from './slate-components'
-
+//import { withHistory } from 'slate-history'
+import { Button, Icon } from './slate-components'
+/*
 const InlinesExample = ({ initialValue }) => {
   
   const [editor] = useState(
@@ -86,33 +85,7 @@ const InlinesExample = ({ initialValue }) => {
     </SlateReact.Slate>
   )
 }
-
-const withInlines = editor => {
-  const { insertData, insertText, isInline } = editor
-
-  editor.isInline = element =>
-    ['link', 'button'].includes(element.type) || isInline(element)
-
-  editor.insertText = text => {
-    if (text && isUrl(text)) {
-      wrapLink(editor, text)
-    } else {
-      insertText(text)
-    }
-  }
-
-  editor.insertData = data => {
-    const text = data.getData('text/plain')
-
-    if (text && isUrl(text)) {
-      wrapLink(editor, text)
-    } else {
-      insertData(data)
-    }
-  }
-
-  return editor
-}
+*/
 
 const insertLink = (editor, url) => {
   if (editor.selection) {
@@ -262,7 +235,7 @@ const EditableButtonComponent = ({ attributes, children }) => {
   )
 }
 
-const Element = props => {
+export const Element = props => {
   const { attributes, children, element } = props
   switch (element.type) {
     case 'link':
@@ -274,7 +247,7 @@ const Element = props => {
   }
 }
 
-const Text = props => {
+export const Text = props => {
   const { attributes, children, leaf } = props
   return (
     <span
@@ -297,7 +270,7 @@ const Text = props => {
   )
 }
 
-const AddLinkButton = () => {
+export const AddLinkButton = () => {
   const editor = useSlate()
   return (
     <Button
@@ -314,7 +287,7 @@ const AddLinkButton = () => {
   )
 }
 
-const RemoveLinkButton = () => {
+export const RemoveLinkButton = () => {
   const editor = useSlate()
 
   return (
@@ -331,7 +304,7 @@ const RemoveLinkButton = () => {
   )
 }
 
-const ToggleEditableButtonButton = () => {
+export const ToggleEditableButtonButton = () => {
   const editor = useSlate()
   return (
     <Button
@@ -349,5 +322,3 @@ const ToggleEditableButtonButton = () => {
     </Button>
   )
 }
-
-export default InlinesExample

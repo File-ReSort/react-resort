@@ -9,12 +9,11 @@ export default function Tags({obj}) {
             block.children?.map(child => {
                 if (child.children) {
                     i++;
-                    console.log(child.children[0].text);
                     const txt = child.children[0].text;
     
                     return (
                         <tr key={i}>
-                            <td></td>
+                            <td><Checkbox onClick={ changeTags } /></td>
                             <td></td>
                             <td>{txt}</td>
                         </tr>
@@ -23,7 +22,12 @@ export default function Tags({obj}) {
             })
         ));
     }
-    
+
+    function changeTags() {
+        let tags = localStorage.getItem('content');
+        console.log(tags);
+    }
+
     return (
         <Table>
             <thead>
