@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 
 export function getSlateJSON(spacy) {
     const out = spacy["annotations"];
@@ -10,6 +11,7 @@ export function getSlateJSON(spacy) {
         const text = item[0];
         const entities = item[1]["entities"];
         const len = entities.length;
+        
 
         if (len == 0) {
             block.children.push({
@@ -22,15 +24,18 @@ export function getSlateJSON(spacy) {
         let start = 0, end = 0;
 
         entities.forEach(entity => {
+            const uuid = uuidv4();
             start = entity[0];
             const between = text.slice(end, start);
             block.children.push({ text: between });
+            //console.log(uuid);
 
             end = entity[1];
             const btnText = text.slice(start, end);
             block.children.push({
                 type: 'button',
                 tag: entity[2],
+                value: uuid,
                 children: [{ text: btnText }]
             });
         })
@@ -39,4 +44,20 @@ export function getSlateJSON(spacy) {
     });
 
     return blocks;
+}
+
+export function deleteIDs(IDs, data) {
+    data.forEach(obj => {
+
+        IDs.forEach(ID => {
+            //result = result.filter(({ value }) => value !== ID);
+            const match = obj.children.findIndex(({ value }) => value === ID);
+            if (match !== -1) {
+                const txt = obj.children[match].children[0].text;
+                obj.children[match] = { text: txt };
+            }
+        })
+    })
+    
+    return data;
 }

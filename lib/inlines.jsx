@@ -11,81 +11,6 @@ import {
 } from 'slate'
 //import { withHistory } from 'slate-history'
 import { Button, Icon } from './slate-components'
-/*
-const InlinesExample = ({ initialValue }) => {
-  
-  const [editor] = useState(
-    () => withInlines(withHistory(withReact(createEditor())))
-  );
-
-  const onKeyDown = event => {
-    const { selection } = editor
-
-    // Default left/right behavior is unit:'character'.
-    // This fails to distinguish between two cursor positions, such as
-    // <inline>foo<cursor/></inline> vs <inline>foo</inline><cursor/>.
-    // Here we modify the behavior to unit:'offset'.
-    // This lets the user step into and out of the inline without stepping over characters.
-    // You may wish to customize this further to only use unit:'offset' in specific cases.
-    if (selection && Range.isCollapsed(selection)) {
-      const { nativeEvent } = event
-      if (isKeyHotkey('left', nativeEvent)) {
-        event.preventDefault()
-        Transforms.move(editor, { unit: 'offset', reverse: true })
-        return
-      }
-      if (isKeyHotkey('right', nativeEvent)) {
-        event.preventDefault()
-        Transforms.move(editor, { unit: 'offset' })
-        return
-      }
-    }
-  }
-
-  return (
-    <SlateReact.Slate 
-      editor={editor}
-      value={initialValue}
-      onChange={value => {
-        const astChange = editor.operations.some(
-          op => 'set_selection' !== op.type
-        )
-        if (astChange) {
-          const content = JSON.stringify(value);
-          localStorage.setItem('content', content);
-          console.log(value);
-        }
-      }}
-    >
-      <Toolbar style={{
-        "backgroundColor": "#fff",
-        "borderBottom": "2px solid #2c4366",
-        "marginRight": "0px",
-        "paddingTop": "16px",
-        "textAlign": "center"
-      }}>
-        <AddLinkButton />
-        <RemoveLinkButton />
-        <ToggleEditableButtonButton />
-      </Toolbar>
-      <Editable
-        renderElement={props => <Element {...props} />}
-        renderLeaf={props => <Text {...props} />}
-        placeholder="Enter some text..."
-        onKeyDown={onKeyDown}
-        style={{
-          "backgroundColor": "#fff",
-          "margin": "auto",
-          "maxWidth": "800px",
-          "padding": "20px 40px",
-          "lineHeight": "1.4em",
-          "boxShadow": "2px 2px 2px #dee2e6"
-        }}
-      />
-    </SlateReact.Slate>
-  )
-}
-*/
 
 const insertLink = (editor, url) => {
   if (editor.selection) {
@@ -205,6 +130,7 @@ const LinkComponent = ({ attributes, children, element }) => {
 }
 
 const EditableButtonComponent = ({ attributes, children, element }) => {
+  const val = element.value;
   let color, border;
 
   switch(element.tag) {
@@ -234,15 +160,15 @@ const EditableButtonComponent = ({ attributes, children, element }) => {
     */
     <span
       {...attributes}
+      value={val}
       onClick={ev => ev.preventDefault()}
       // Margin is necessary to clearly show the cursor adjacent to the button
       className={css`
         margin: 0 0.1em;
-        backgroundColor: #e7f5ff;
-        padding: 2px 6px;
+        background-color: #e7f5ff;
+        padding: 1px 6px;
         border: 1px solid #74c0fc;
-        fontSize: 0.9em;
-        lineHeight: 0.9em;
+        font-size: 0.9em;
       `}
       style={{
         backgroundColor: color,
@@ -339,7 +265,8 @@ export const ToggleEditableButtonButton = () => {
         }
       }}
     >
-      <Icon>add tag</Icon>
+      <Icon><img src="tag.svg" width={14} /></Icon>
+      <span>Add Tags</span>
     </Button>
   )
 }

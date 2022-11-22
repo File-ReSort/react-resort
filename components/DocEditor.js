@@ -1,13 +1,12 @@
-import { Button } from '@mantine/core';
+import { Button, Checkbox, Container, Flex, Select } from '@mantine/core';
 import React, { useState } from 'react';
 import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
-import { getSlateJSON } from '../lib/spacy-to-slate';
+import { deleteIDs, getSlateJSON } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
 import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
-import Tags from './Tags';
 import styles from '../styles/DocEditor.module.css';
 
 const spacyOut = {
@@ -136,14 +135,40 @@ const spacyOut = {
     ]
 };
 
+const withInlines = editor => {
+    const { insertData, insertText, isInline } = editor
+
+    editor.isInline = element =>
+        ['link', 'button'].includes(element.type) || isInline(element)
+
+    editor.insertText = text => {
+        if (text && isUrl(text)) {
+            wrapLink(editor, text)
+        } else {
+            insertText(text)
+        }
+    }
+
+    editor.insertData = data => {
+        const text = data.getData('text/plain')
+
+        if (text && isUrl(text)) {
+            wrapLink(editor, text)
+        } else {
+            insertData(data)
+        }
+    }
+
+    return editor
+}
+
 export default function DocEditor() {
-    const [data, setData] = useState(tags);
-    const [editor] = useState(
-        () => withInlines(withHistory(withReact(createEditor())))
-    );
+    const [data, setData] = useState(getSlateJSON(spacyOut));
+    const [checked, setChecked] = useState([]);
+    const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));
 
     // credit: Slate
-    const onKeyDown = event => {
+    function onKeyDown(event) {
         const { selection } = editor
 
         if (selection && Range.isCollapsed(selection)) {
@@ -161,40 +186,25 @@ export default function DocEditor() {
         }
     }
     //end Slate
-    
-    function handleChange() {
-        let str = localStorage.getItem('content');
-        setData(JSON.parse(str));
+
+    function handleDelete() {
+        const result = deleteIDs(checked, data);
+        setData(result);
+        setChecked([]);
     }
 
     return (
-        <div className={styles.editor}>
-            <div className={styles.txtContainer}>
-                <div className={styles.text}>
+        <Flex justify="space-between" className={styles.editor}>
+            <Container justify="center" className={styles.txtContainer}>
+                <Container size="sm" className={styles.text}>
                     <SlateReact.Slate
                         editor={editor}
                         value={data}
-                        onChange={value => {
-                            const astChange = editor.operations.some(
-                                op => 'set_selection' !== op.type
-                            )
-                            if (astChange) {
-                                const content = JSON.stringify(value);
-                                localStorage.setItem('content', content);
-                                handleChange();
-                                console.log(value);
-                            }
-                        }}
                     >
                         <Toolbar style={{
-                            backgroundColor: "#fff",
-                            borderBottom: "2px solid #2c4366",
-                            marginRight: "0px",
                             paddingTop: "16px",
-                            textAlign: "center"
+                            textAlign: "right"
                         }}>
-                            <AddLinkButton />
-                            <RemoveLinkButton />
                             <ToggleEditableButtonButton />
                         </Toolbar>
                         <Editable
@@ -203,59 +213,63 @@ export default function DocEditor() {
                             placeholder="Enter some text..."
                             onKeyDown={onKeyDown}
                             style={{
-                                backgroundColor: "#fff",
-                                margin: "auto",
-                                maxWidth: "800px",
-                                padding: "20px 40px",
-                                lineHeight: "1.4em",
-                                boxShadow: "2px 2px 2px #dee2e6"
+                                padding: "16px",
+                                lineHeight: "1.2em"
                             }}
                         />
                     </SlateReact.Slate>
+                </Container>
+            </Container>
+
+            <Container size={470} className={styles.options}>
+                <div className={styles.section}>
+                    <h3>Entities</h3>
+                    
+                    <div className={styles.tags}>
+                        <Checkbox.Group
+                            orientation="vertical"
+                            spacing={0}
+                            value={checked}
+                            onChange={setChecked}
+                        >
+                        { 
+                            data.map(block => block.children.map(child => {
+                                if (child.children) {
+                                    const txt = child.children[0].text;
+                                    const currentVal = child.value;
+                            
+                                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
+                                }
+                            }))
+                        }
+                        </Checkbox.Group>
+                    </div>
+                    
+                    <Flex align="center" gap={6}>
+                        <Button variant="subtle" px={10} onClick={handleDelete}>
+                            <img src="trash3.svg" /> 
+                        </Button>
+                        <span>{checked.length} selected</span>
+                    </Flex>
                 </div>
-            </div>
-            <div className={styles.options}>
+
                 <div className={styles.section}>
                     <h3>Rules</h3>
 
+                    <Flex gap={4}>
+                        <Select data={[]} placeholder="Entity 1" />
+                        <Select data={[]} placeholder="Relationship" />
+                        <Select data={[]} placeholder="Entity 2" />
+                        <Button>+</Button>
+                    </Flex>
                 </div>
+
                 <div className={styles.section}>
-                    <h3>Entities</h3>
-                    <div className={styles.tags}>
-                        <Tags obj={data} />
-                    </div>
-                    <Button onClick={handleChange} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                        <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
                 </div>
-            </div>
-        </div>
+            </Container>
+        </Flex>
     );
 }
 
-const tags = getSlateJSON(spacyOut);
-
-const withInlines = editor => {
-    const { insertData, insertText, isInline } = editor
-  
-    editor.isInline = element =>
-      ['link', 'button'].includes(element.type) || isInline(element)
-  
-    editor.insertText = text => {
-      if (text && isUrl(text)) {
-        wrapLink(editor, text)
-      } else {
-        insertText(text)
-      }
-    }
-  
-    editor.insertData = data => {
-      const text = data.getData('text/plain')
-  
-      if (text && isUrl(text)) {
-        wrapLink(editor, text)
-      } else {
-        insertData(data)
-      }
-    }
-  
-    return editor
-  }
+//const tags = getSlateJSON(spacyOut);
