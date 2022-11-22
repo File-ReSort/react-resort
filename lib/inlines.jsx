@@ -1,15 +1,12 @@
 import React from 'react'
-//import { useState } from 'react'
 import { css } from '@emotion/css'
 import { useSlate, useSelected } from 'slate-react'
-//import * as SlateReact from 'slate-react'
 import {
   Transforms,
   Editor,
   Range,
   Element as SlateElement
 } from 'slate'
-//import { withHistory } from 'slate-history'
 import { Button, Icon } from './slate-components'
 
 const insertLink = (editor, url) => {
@@ -84,6 +81,7 @@ const wrapButton = editor => {
   const isCollapsed = selection && Range.isCollapsed(selection)
   const button = {
     type: 'button',
+    tag: 'PERSON',
     children: isCollapsed ? [{ text: 'Edit me!' }] : [],
   }
 
@@ -265,7 +263,7 @@ export const ToggleEditableButtonButton = () => {
         }
       }}
     >
-      <Icon><img src="tag.svg" width={14} /></Icon>
+      <Icon><img src="../tag.svg" width={16} height={16} /></Icon>
       <span>Add Tags</span>
     </Button>
   )

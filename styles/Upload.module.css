@@ -1,0 +1,10 @@
+.container {
+	display: grid;
+  	height: 100vh;
+  	grid-template-rows: 80px 1fr;
+}
+
+.title {
+	font-family: 'Wellfleet';
+	font-size: 30px;
+}

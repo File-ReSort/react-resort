@@ -8,6 +8,7 @@ import { createEditor } from 'slate';
 import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../styles/DocEditor.module.css';
+import { useRouter } from 'next/router';
 
 const spacyOut = {
     "classes": [
@@ -166,7 +167,7 @@ export default function DocEditor() {
     const [data, setData] = useState(getSlateJSON(spacyOut));
     const [checked, setChecked] = useState([]);
     const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));
-
+    const router = useRouter();
     // credit: Slate
     function onKeyDown(event) {
         const { selection } = editor
@@ -193,20 +194,24 @@ export default function DocEditor() {
         setChecked([]);
     }
 
+    function handleSave() {
+        const jsonDoc = JSON.stringify(data);
+        window.localStorage.setItem('jsonDoc', jsonDoc);
+        router.push('/rule-editor')
+    }
+
     return (
-        <Flex justify="space-between" className={styles.editor}>
-            <Container justify="center" className={styles.txtContainer}>
-                <Container size="sm" className={styles.text}>
-                    <SlateReact.Slate
-                        editor={editor}
-                        value={data}
-                    >
+        <Flex justify="center" className={styles.editor}>
+            <Container className={styles.txtContainer}>
+                <Container size="md" className={styles.text}>
+                    <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                         <Toolbar style={{
                             paddingTop: "16px",
                             textAlign: "right"
                         }}>
                             <ToggleEditableButtonButton />
                         </Toolbar>
+
                         <Editable
                             renderElement={props => <Element {...props} />}
                             renderLeaf={props => <Text {...props} />}
@@ -221,7 +226,7 @@ export default function DocEditor() {
                 </Container>
             </Container>
 
-            <Container size={470} className={styles.options}>
+            <Container size={480} className={styles.options}>
                 <div className={styles.section}>
                     <h3>Entities</h3>
                     
@@ -246,9 +251,10 @@ export default function DocEditor() {
                     </div>
                     
                     <Flex align="center" gap={6}>
-                        <Button variant="subtle" px={10} onClick={handleDelete}>
-                            <img src="trash3.svg" /> 
+                        <Button color="red" variant="outline" px={10} onClick={handleDelete}>
+                            <img src="../trash3.svg" />
                         </Button>
+
                         <span>{checked.length} selected</span>
                     </Flex>
                 </div>
@@ -265,11 +271,11 @@ export default function DocEditor() {
                 </div>
 
                 <div className={styles.section}>
-                        <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                        <Button onClick={handleSave} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>
+                            Save and Continue
+                        </Button>
                 </div>
             </Container>
         </Flex>
     );
 }
-
-//const tags = getSlateJSON(spacyOut);
