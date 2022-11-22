@@ -1,15 +1,16 @@
 import Head from 'next/head';
 import styles from '../styles/Upload.module.css';
-import { MantineProvider, Anchor, Breadcrumbs, Container, Flex, Header, Stepper } from '@mantine/core';
+import { MantineProvider, Breadcrumbs } from '@mantine/core';
+import Link from 'next/link';
 
 const items = [
-    { title: 'Upload', href: '/upload/doc-editor' },
+    { title: 'Upload Files', href: '/upload/doc-editor' },
     { title: 'Link 2', href: '#' },
-    { title: 'Another Link', href: '#' },
+    { title: 'Link 3', href: '#' },
 ].map((item, index) => (
-    <Anchor href={item.href} key={index}>
+    <Link href={item.href} key={index}>
         {item.title}
-    </Anchor>
+    </Link>
 ));
 
 const Home = () => {
