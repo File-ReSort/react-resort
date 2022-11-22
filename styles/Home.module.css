@@ -1,14 +1,12 @@
-.apptop {
-	border-bottom: 2px solid #4a4b5d;
-}
+
 
 .container {
 	display: grid;
   	height: 100vh;
-  	grid-template-rows: 110px 1fr;
+  	grid-template-rows: 80px 1fr;
 }
 
 .title {
 	font-family: 'Wellfleet';
-	font-size: 32px;
+	font-size: 30px;
 }

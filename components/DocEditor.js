@@ -1,13 +1,12 @@
-import { Button, Checkbox, Table } from '@mantine/core';
+import { Button, Checkbox, Container, Flex, Select } from '@mantine/core';
 import React, { useState } from 'react';
 import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
-import { getSlateJSON } from '../lib/spacy-to-slate';
+import { deleteIDs, getSlateJSON } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
 import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
-import Tags from './Tags';
 import styles from '../styles/DocEditor.module.css';
 
 const spacyOut = {
@@ -165,11 +164,8 @@ const withInlines = editor => {
 
 export default function DocEditor() {
     const [data, setData] = useState(getSlateJSON(spacyOut));
+    const [checked, setChecked] = useState([]);
     const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));
-
-    function handleChange(e) {
-        setData(e.target.value);
-    }
 
     // credit: Slate
     function onKeyDown(event) {
@@ -191,29 +187,24 @@ export default function DocEditor() {
     }
     //end Slate
 
-    function refreshEditor(e) {
-        let val = e.target.id;
-        //setData(value);
-        console.log(val);
+    function handleDelete() {
+        const result = deleteIDs(checked, data);
+        setData(result);
+        setChecked([]);
     }
 
     return (
-        <div className={styles.editor}>
-            <div className={styles.txtContainer}>
-                <div className={styles.text}>
+        <Flex justify="space-between" className={styles.editor}>
+            <Container justify="center" className={styles.txtContainer}>
+                <Container size="sm" className={styles.text}>
                     <SlateReact.Slate
                         editor={editor}
                         value={data}
                     >
                         <Toolbar style={{
-                            backgroundColor: "#fff",
-                            borderBottom: "2px solid #2c4366",
-                            marginRight: "0px",
                             paddingTop: "16px",
-                            textAlign: "center"
+                            textAlign: "right"
                         }}>
-                            <AddLinkButton />
-                            <RemoveLinkButton />
                             <ToggleEditableButtonButton />
                         </Toolbar>
                         <Editable
@@ -222,50 +213,62 @@ export default function DocEditor() {
                             placeholder="Enter some text..."
                             onKeyDown={onKeyDown}
                             style={{
-                                backgroundColor: "#fff",
-                                margin: "auto",
-                                maxWidth: "800px",
-                                padding: "20px 40px",
-                                lineHeight: "1.4em",
-                                boxShadow: "2px 2px 2px #dee2e6"
+                                padding: "16px",
+                                lineHeight: "1.2em"
                             }}
                         />
                     </SlateReact.Slate>
-                </div>
-            </div>
-            <div className={styles.options}>
-                <div className={styles.section}>
-                    <h3>Rules</h3>
+                </Container>
+            </Container>
 
-                </div>
+            <Container size={470} className={styles.options}>
                 <div className={styles.section}>
                     <h3>Entities</h3>
+                    
                     <div className={styles.tags}>
                         <Checkbox.Group
                             orientation="vertical"
+                            spacing={0}
+                            value={checked}
+                            onChange={setChecked}
                         >
-                                {
-                                    data.map(block => block.children.map(child => {
-                                        if (child.children) {
-                                            const txt = child.children[0].text;
-                                            const currentVal = child.value;
-                                            console.log(JSON.stringify(currentVal));
+                        { 
+                            data.map(block => block.children.map(child => {
+                                if (child.children) {
+                                    const txt = child.children[0].text;
+                                    const currentVal = child.value;
                             
-                                            return (
-                                                <Checkbox value={currentVal} label={txt} />
-                                            );
-                                        }
-                                    }))
+                                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
                                 }
+                            }))
+                        }
                         </Checkbox.Group>
                     </div>
-                    <div>
-                        <Button variant="subtle">delete</Button>
-                        <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
-                    </div>
+                    
+                    <Flex align="center" gap={6}>
+                        <Button variant="subtle" px={10} onClick={handleDelete}>
+                            <img src="trash3.svg" /> 
+                        </Button>
+                        <span>{checked.length} selected</span>
+                    </Flex>
                 </div>
-            </div>
-        </div>
+
+                <div className={styles.section}>
+                    <h3>Rules</h3>
+
+                    <Flex gap={4}>
+                        <Select data={[]} placeholder="Entity 1" />
+                        <Select data={[]} placeholder="Relationship" />
+                        <Select data={[]} placeholder="Entity 2" />
+                        <Button>+</Button>
+                    </Flex>
+                </div>
+
+                <div className={styles.section}>
+                        <Button variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>Save and Continue</Button>
+                </div>
+            </Container>
+        </Flex>
     );
 }
 

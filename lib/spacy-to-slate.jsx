@@ -28,7 +28,7 @@ export function getSlateJSON(spacy) {
             start = entity[0];
             const between = text.slice(end, start);
             block.children.push({ text: between });
-            console.log(uuid);
+            //console.log(uuid);
 
             end = entity[1];
             const btnText = text.slice(start, end);
@@ -44,4 +44,20 @@ export function getSlateJSON(spacy) {
     });
 
     return blocks;
+}
+
+export function deleteIDs(IDs, data) {
+    data.forEach(obj => {
+
+        IDs.forEach(ID => {
+            //result = result.filter(({ value }) => value !== ID);
+            const match = obj.children.findIndex(({ value }) => value === ID);
+            if (match !== -1) {
+                const txt = obj.children[match].children[0].text;
+                obj.children[match] = { text: txt };
+            }
+        })
+    })
+    
+    return data;
 }
