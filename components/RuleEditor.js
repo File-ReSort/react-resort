@@ -1,11 +1,8 @@
 import { Button, Checkbox, Container, Flex, Select } from '@mantine/core';
 import React, { useState } from 'react';
-import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
 import { withHistory } from 'slate-history';
-import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
 import { Editable, withReact } from 'slate-react';
-import * as SlateReact from 'slate-react';
 
 export default function RuleEditor() {
     const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));

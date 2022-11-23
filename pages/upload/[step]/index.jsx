@@ -42,8 +42,7 @@ export default function Upload() {
                             >
                                 <Stepper.Step label="Step 1" description="Upload Documents" />
                                 <Stepper.Step label="Step 2" description="Edit Tags" />
-                                <Stepper.Step label="Step 3" description="Edit Rules" />
-                                <Stepper.Step label="Step 4" description="Finalize" />
+                                <Stepper.Step label="Step 3" description="Finalize" />
                             </Stepper>
                         </Flex>
                     </Header>

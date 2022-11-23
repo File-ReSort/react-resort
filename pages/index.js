@@ -60,9 +60,10 @@ const Home = () => {
                 }
                 >
                     <Space h={50}/>
-                    <Center><img src="No.png" width={400}/></Center>
+                    <Center><img src="No.png" width={320}/></Center>
                     <Space h={50}/>
                     <Center>
+                        <Text>No files yet!</Text>
                         <Link href="/upload/doc-editor">
                         <Button variant="light" color="indigo" size="lg">
                             Get Started
