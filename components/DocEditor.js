@@ -1,7 +1,7 @@
 import { Button, Checkbox, Container, Flex, Select } from '@mantine/core';
 import React, { useState } from 'react';
 import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
-import { deleteIDs, getSlateJSON } from '../lib/spacy-to-slate';
+import { deleteIDs, getSlateJSON, updateIDs } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
@@ -168,6 +168,7 @@ export default function DocEditor() {
     const [checked, setChecked] = useState([]);
     const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));
     const router = useRouter();
+
     // credit: Slate
     function onKeyDown(event) {
         const { selection } = editor
@@ -188,16 +189,35 @@ export default function DocEditor() {
     }
     //end Slate
 
+    function handleChange() {
+        const out = updateIDs(data);
+        setData(out);
+    }
+
     function handleDelete() {
-        const result = deleteIDs(checked, data);
-        setData(result);
+        const out = deleteIDs(checked, data);
+        //console.log(out);
         setChecked([]);
+        setData(updateIDs(out));
     }
 
     function handleSave() {
         const jsonDoc = JSON.stringify(data);
         window.localStorage.setItem('jsonDoc', jsonDoc);
-        router.push('/rule-editor')
+        router.push('/upload/finalize')
+    }
+
+    const Checkboxes = ({info}) => {
+        return(
+            info.map(block => block.children.map(child => {
+                if (child.children) {
+                    const txt = child.children[0].text;
+                    const currentVal = child.value;
+            
+                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
+                }
+            }))
+        );
     }
 
     return (
@@ -237,16 +257,7 @@ export default function DocEditor() {
                             value={checked}
                             onChange={setChecked}
                         >
-                        { 
-                            data.map(block => block.children.map(child => {
-                                if (child.children) {
-                                    const txt = child.children[0].text;
-                                    const currentVal = child.value;
-                            
-                                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
-                                }
-                            }))
-                        }
+                            <Checkboxes info={data}/>
                         </Checkbox.Group>
                     </div>
                     
