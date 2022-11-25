@@ -261,7 +261,7 @@ export default function DocEditor() {
                         </Checkbox.Group>
                     </div>
                     
-                    <Flex align="center" gap={6}>
+                    <Flex align="center" py={10} gap={6}>
                         <Button color="red" variant="outline" px={10} onClick={handleDelete}>
                             <img src="../trash3.svg" />
                         </Button>
@@ -282,9 +282,9 @@ export default function DocEditor() {
                 </div>
 
                 <div className={styles.section}>
-                        <Button onClick={handleSave} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>
-                            Save and Continue
-                        </Button>
+                    <Button onClick={handleSave} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>
+                        Save and Continue
+                    </Button>
                 </div>
             </Container>
         </Flex>
