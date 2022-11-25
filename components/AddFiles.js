@@ -5,8 +5,12 @@ import { useState } from "react";
 export default function AddFiles() {
     const [visible, setVisible] = useState('none');
     return (
-        <Flex justify='center' py={60}>
-            <Container size="md">
+        <Flex justify='center' py={60} style={{ backgroundColor: '#8f9db8' }}>
+            <Container size="md" style={{
+                backgroundColor: '#fff',
+                border: '1px solid #000',
+                padding: '40px'
+            }}>
                 <Tabs
                     defaultValue="first"
                 >

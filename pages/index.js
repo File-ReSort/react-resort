@@ -58,7 +58,7 @@ const Home = () => {
                         <Stack>
                             <Text>No files yet!</Text>
                             
-                            <Link href="/upload/doc-editor">
+                            <Link href="/upload/add-files">
                                 <Button variant="light" color="indigo" size="lg">
                                     Get Started
                                 </Button>
