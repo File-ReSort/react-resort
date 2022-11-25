@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
+export const UUID = () => uuidv4();
+
 export function getSlateJSON(spacy) {
     const out = spacy["annotations"];
 
@@ -24,7 +26,6 @@ export function getSlateJSON(spacy) {
         let start = 0, end = 0;
 
         entities.forEach(entity => {
-            const uuid = uuidv4();
             start = entity[0];
             const between = text.slice(end, start);
             block.children.push({ text: between });
@@ -35,7 +36,7 @@ export function getSlateJSON(spacy) {
             block.children.push({
                 type: 'button',
                 tag: entity[2],
-                value: uuid,
+                value: UUID(),
                 children: [{ text: btnText }]
             });
         })
@@ -46,18 +47,49 @@ export function getSlateJSON(spacy) {
     return blocks;
 }
 
-export function deleteIDs(IDs, data) {
-    data.forEach(obj => {
+export function updateIDs(data) {
+    const out = [];
 
-        IDs.forEach(ID => {
-            //result = result.filter(({ value }) => value !== ID);
-            const match = obj.children.findIndex(({ value }) => value === ID);
-            if (match !== -1) {
-                const txt = obj.children[match].children[0].text;
-                obj.children[match] = { text: txt };
+    data.forEach(obj => {
+        const res = obj.children.map(child => {
+            let edited = child;
+
+            if (('tag' in child) && !('value' in child)) {
+                edited.value = UUID;
             }
-        })
-    })
+
+            return edited;
+        });
+
+        out.push({ type: "paragraph", children: res });
+    });
+
+    return out;
+}
+
+export function deleteIDs(IDs, data) {
+    const out = [];
+
+    data.forEach(obj => {
+        const res = obj.children.map(child => {
+            let edited = child;
+
+            for (let ID of IDs) {
+                const match = obj.children.findIndex(({ value }) => value === ID);
+                
+                if (match !== -1) {
+                    console.log(obj.children[match]);
+                    const txt = obj.children[match].children[0].text;
+                    edited = { text: txt };
+                    break;
+                }
+            }
+
+            return edited;
+        });
+
+        out.push({ type: "paragraph", children: res });
+    });
     
-    return data;
+    return out;
 }

@@ -4,12 +4,15 @@ import {
     AppShell,
     Button,
     Center,
+    Container,
+    Flex,
     Navbar,
     Header,
     Space,
     Text,
     Title,
-    MantineProvider
+    MantineProvider,
+    Stack
   } from '@mantine/core';
 import Link from 'next/link';
 
@@ -42,34 +45,28 @@ const Home = () => {
                     },
                 }}
             >
-                <AppShell
-                navbarOffsetBreakpoint="sm"
-                asideOffsetBreakpoint="sm"
-                navbar={
-                    <Navbar p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-                    <Text>Application navbar</Text>
-                    </Navbar>
-                }
-                header={
-                    <Header height={{ base: 50, md: 70 }} p="md">
-                    <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
 
+                <Navbar p="md" width={{ sm: 200, lg: 300 }} style={{float: 'left'}}>
+                    <Navbar.Section><Text>navbar</Text></Navbar.Section>
+                </Navbar>
+                
+                <Container>
+                    <Flex px={40} py={20}>
                         <Title>File ReSort</Title>
-                    </div>
-                    </Header>
-                }
-                >
-                    <Space h={50}/>
-                    <Center><img src="No.png" width={400}/></Center>
-                    <Space h={50}/>
-                    <Center>
-                        <Link href="/upload/doc-editor">
-                        <Button variant="light" color="indigo" size="lg">
-                            Get Started
-                        </Button>
-                        </Link>
-                    </Center>
-                </AppShell>
+                    </Flex>
+                    <Flex px={30} py={20} gap={60} align='center' justify='center'>
+                        <Stack>
+                            <Text>No files yet!</Text>
+                            
+                            <Link href="/upload/doc-editor">
+                                <Button variant="light" color="indigo" size="lg">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        </Stack>
+                        <img src="No.png" width={300}/>
+                    </Flex>
+                </Container>
             </MantineProvider>
         </div>
     )

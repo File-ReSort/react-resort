@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { MantineProvider, Anchor, Breadcrumbs, Container, Flex, Header, Stepper } from '@mantine/core';
 import styles from '../../../styles/Upload.module.css';
 import { useRouter } from 'next/router';
+import AddFiles from '../../../components/AddFiles';
 import DocEditor from '../../../components/DocEditor';
 
 export default function Upload() {
@@ -11,6 +12,8 @@ export default function Upload() {
         switch(page) {
             case 'doc-editor':
                 return (<DocEditor />);
+            case 'add-files':
+                return (<AddFiles />);
         }
     };
 
@@ -34,7 +37,7 @@ export default function Upload() {
                                 <h1 className={styles.title}>File ReSort</h1>
                             </Flex>
 
-                            <Stepper color="blue.8" radius="sm" size="sm" styles={{
+                            <Stepper color="blue.4" radius="sm" size="md" styles={{
                                 separator: {
                                     width: 26
                                 },
@@ -42,8 +45,7 @@ export default function Upload() {
                             >
                                 <Stepper.Step label="Step 1" description="Upload Documents" />
                                 <Stepper.Step label="Step 2" description="Edit Tags" />
-                                <Stepper.Step label="Step 3" description="Edit Rules" />
-                                <Stepper.Step label="Step 4" description="Finalize" />
+                                <Stepper.Step label="Step 3" description="Finalize" />
                             </Stepper>
                         </Flex>
                     </Header>
