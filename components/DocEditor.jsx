@@ -1,6 +1,6 @@
-import { Button, Checkbox, Container, Flex, Select } from '@mantine/core';
-import React, { useState } from 'react';
-import { AddLinkButton, Element, RemoveLinkButton, Text, ToggleEditableButtonButton } from '../lib/inlines';
+import { ActionIcon, Button, Checkbox, Container, Flex, ScrollArea, Select, Space } from '@mantine/core';
+import React, { useState, useMemo } from 'react';
+import onKeyDown, { Element, Text, ToggleEditableButtonButton } from '../lib/inlines';
 import { deleteIDs, getSlateJSON, updateIDs } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from '../lib/slate-components';
@@ -166,106 +166,88 @@ const withInlines = editor => {
 export default function DocEditor() {
     const [data, setData] = useState(getSlateJSON(spacyOut));
     const [checked, setChecked] = useState([]);
-    const [editor] = useState(() => withInlines(withHistory(withReact(createEditor()))));
+    const editor = useMemo(
+        () => withInlines(withHistory(withReact(createEditor()))),
+        []
+    );
     const router = useRouter();
 
-    // credit: Slate
-    function onKeyDown(event) {
-        const { selection } = editor
-
-        if (selection && Range.isCollapsed(selection)) {
-            const { nativeEvent } = event
-            if (isKeyHotkey('left', nativeEvent)) {
-                event.preventDefault()
-                Transforms.move(editor, { unit: 'offset', reverse: true })
-                return
-            }
-            if (isKeyHotkey('right', nativeEvent)) {
-                event.preventDefault()
-                Transforms.move(editor, { unit: 'offset' })
-                return
-            }
-        }
-    }
-    //end Slate
-
-    function handleChange() {
-        const out = updateIDs(data);
+    function handleChange(values) {
+        const out = updateIDs(values);
         setData(out);
     }
 
     function handleDelete() {
         const out = deleteIDs(checked, data);
-        //console.log(out);
         setChecked([]);
-        setData(updateIDs(out));
+        setData(out);
     }
 
     function handleSave() {
-        const jsonDoc = JSON.stringify(data);
-        window.localStorage.setItem('jsonDoc', jsonDoc);
-        router.push('/upload/finalize')
+        //const jsonDoc = JSON.stringify(data);
+        //window.localStorage.setItem('jsonDoc', jsonDoc);
+        router.push('/upload/3')
     }
 
-    const Checkboxes = ({info}) => {
-        return(
-            info.map(block => block.children.map(child => {
-                if (child.children) {
-                    const txt = child.children[0].text;
-                    const currentVal = child.value;
-            
-                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
-                }
-            }))
-        );
+    const MyEditor = () => {
+        return (
+            <SlateReact.Slate editor={editor} value={data} onChange={setData}>
+                <Toolbar style={{
+                    paddingTop: "16px",
+                    textAlign: "right"
+                }}>
+                    <ToggleEditableButtonButton />
+                </Toolbar>
+                <Editable
+                    renderElement={props => <Element {...props} />}
+                    renderLeaf={props => <Text {...props} />}
+                    placeholder="Enter some text..."
+                    onKeyDown={event => onKeyDown(event, editor)}
+                    style={{
+                        padding: "16px",
+                        lineHeight: "1.2em"
+                    }}
+                />
+            </SlateReact.Slate>
+        )
     }
 
     return (
         <Flex justify="center" className={styles.editor}>
             <Container className={styles.txtContainer}>
                 <Container size="md" className={styles.text}>
-                    <SlateReact.Slate editor={editor} value={data} onChange={setData}>
-                        <Toolbar style={{
-                            paddingTop: "16px",
-                            textAlign: "right"
-                        }}>
-                            <ToggleEditableButtonButton />
-                        </Toolbar>
-
-                        <Editable
-                            renderElement={props => <Element {...props} />}
-                            renderLeaf={props => <Text {...props} />}
-                            placeholder="Enter some text..."
-                            onKeyDown={onKeyDown}
-                            style={{
-                                padding: "16px",
-                                lineHeight: "1.2em"
-                            }}
-                        />
-                    </SlateReact.Slate>
+                    <MyEditor />
                 </Container>
             </Container>
 
             <Container size={480} className={styles.options}>
                 <div className={styles.section}>
                     <h3>Entities</h3>
-                    
-                    <div className={styles.tags}>
+
+                    <ScrollArea style={{ height: 260 }} type="always" offsetScrollbars scrollbarSize={14}>
                         <Checkbox.Group
                             orientation="vertical"
                             spacing={0}
                             value={checked}
                             onChange={setChecked}
                         >
-                            <Checkboxes info={data}/>
-                        </Checkbox.Group>
-                    </div>
-                    
-                    <Flex align="center" py={10} gap={6}>
-                        <Button color="red" variant="outline" px={10} onClick={handleDelete}>
-                            <img src="../trash3.svg" />
-                        </Button>
+                        {   
+                            data.map(block => block.children.map(child => {
+                                if (child.children) {
+                                    const txt = child.children[0].text;
+                                    const currentVal = child.value;
 
+                                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
+                                }
+                            }))
+                        }
+                        </Checkbox.Group>
+                    </ScrollArea>
+                        
+                    <Flex align="center" py={10} gap={6}>
+                        <ActionIcon color="dark" variant="light" onClick={handleDelete}>
+                            <img src="../trash3.svg" height={16} width={16} />
+                        </ActionIcon>
                         <span>{checked.length} selected</span>
                     </Flex>
                 </div>
@@ -277,10 +259,10 @@ export default function DocEditor() {
                         <Select data={[]} placeholder="Entity 1" />
                         <Select data={[]} placeholder="Relationship" />
                         <Select data={[]} placeholder="Entity 2" />
-                        <Button>+</Button>
+                        <Button color="indigo.6">+</Button>
                     </Flex>
                 </div>
-
+                <Space h={30} />
                 <div className={styles.section}>
                     <Button onClick={handleSave} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>
                         Save and Continue

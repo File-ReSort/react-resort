@@ -7,13 +7,7 @@ import {
   Range,
   Element as SlateElement
 } from 'slate'
-import { Button, Icon } from './slate-components'
-
-const insertLink = (editor, url) => {
-  if (editor.selection) {
-    wrapLink(editor, url)
-  }
-}
+import { Button, Icon, Toolbar } from './slate-components'
 
 const insertButton = editor => {
   if (editor.selection) {
@@ -37,39 +31,11 @@ const isButtonActive = editor => {
   return !!button
 }
 
-const unwrapLink = editor => {
-  Transforms.unwrapNodes(editor, {
-    match: n =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
-  })
-}
-
 const unwrapButton = editor => {
   Transforms.unwrapNodes(editor, {
     match: n =>
       !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'button',
   })
-}
-
-const wrapLink = (editor, url) => {
-  if (isLinkActive(editor)) {
-    unwrapLink(editor)
-  }
-
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  const link = {
-    type: 'link',
-    url,
-    children: isCollapsed ? [{ text: url }] : [],
-  }
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, link)
-  } else {
-    Transforms.wrapNodes(editor, link, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
-  }
 }
 
 const wrapButton = editor => {
@@ -106,32 +72,11 @@ const InlineChromiumBugfix = () => (
   </span>
 )
 
-const LinkComponent = ({ attributes, children, element }) => {
-  const selected = useSelected()
-  return (
-    <a
-      {...attributes}
-      href={element.url}
-      className={
-        selected
-          ? css`
-              box-shadow: 0 0 0 3px #ddd;
-            `
-          : ''
-      }
-    >
-      <InlineChromiumBugfix />
-      {children}
-      <InlineChromiumBugfix />
-    </a>
-  )
-}
-
-const EditableButtonComponent = ({ attributes, children, element }) => {
+export const EditableButtonComponent = ({ attributes, children, element }) => {
   const val = element.value;
   let color, border;
 
-  switch(element.tag) {
+  switch (element.tag) {
     case "PERSON":
       color = "#f4e7ff";
       border = "#ce94ff";
@@ -215,40 +160,6 @@ export const Text = props => {
   )
 }
 
-export const AddLinkButton = () => {
-  const editor = useSlate()
-  return (
-    <Button
-      active={isLinkActive(editor)}
-      onMouseDown={event => {
-        event.preventDefault()
-        const url = window.prompt('Enter the URL of the link:')
-        if (!url) return
-        insertLink(editor, url)
-      }}
-    >
-      <Icon>link</Icon>
-    </Button>
-  )
-}
-
-export const RemoveLinkButton = () => {
-  const editor = useSlate()
-
-  return (
-    <Button
-      active={isLinkActive(editor)}
-      onMouseDown={event => {
-        if (isLinkActive(editor)) {
-          unwrapLink(editor)
-        }
-      }}
-    >
-      <Icon>link_off</Icon>
-    </Button>
-  )
-}
-
 export const ToggleEditableButtonButton = () => {
   const editor = useSlate()
   return (
@@ -267,4 +178,23 @@ export const ToggleEditableButtonButton = () => {
       <span>Add Tags</span>
     </Button>
   )
+}
+
+export const onKeyDown = ({ event, editor }) => {
+  const { selection } = editor
+
+  if (selection && Range.isCollapsed(selection)) {
+
+    const { nativeEvent } = event
+    if (isKeyHotkey('left', nativeEvent)) {
+      event.preventDefault()
+      Transforms.move(editor, { unit: 'offset', reverse: true })
+      return
+    }
+    if (isKeyHotkey('right', nativeEvent)) {
+      event.preventDefault()
+      Transforms.move(editor, { unit: 'offset' })
+      return
+    }
+  }
 }
