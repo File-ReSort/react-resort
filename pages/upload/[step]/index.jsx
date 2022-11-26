@@ -10,10 +10,12 @@ export default function Upload() {
     const page = router.query.step;
     const Page = () => {
         switch(page) {
-            case 'doc-editor':
+            case '2':
                 return (<DocEditor />);
-            case 'add-files':
+            case '1':
                 return (<AddFiles />);
+            case '3':
+                return (<></>);
         }
     };
 
@@ -37,11 +39,11 @@ export default function Upload() {
                                 <h1 className={styles.title}>File ReSort</h1>
                             </Flex>
 
-                            <Stepper color="blue.4" radius="sm" size="md" styles={{
+                            <Stepper color="indigo.6" radius="sm" size="md" styles={{
                                 separator: {
                                     width: 26
                                 },
-                            }} active={1}
+                            }} active={page-1}
                             >
                                 <Stepper.Step label="Step 1" description="Upload Documents" />
                                 <Stepper.Step label="Step 2" description="Edit Tags" />

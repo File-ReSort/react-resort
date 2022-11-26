@@ -74,16 +74,12 @@ export function deleteIDs(IDs, data) {
         const res = obj.children.map(child => {
             let edited = child;
 
-            for (let ID of IDs) {
-                const match = obj.children.findIndex(({ value }) => value === ID);
-                
-                if (match !== -1) {
-                    console.log(obj.children[match]);
-                    const txt = obj.children[match].children[0].text;
+            IDs.forEach(ID => {
+                if (child.value === ID) {
+                    const txt = child.children[0].text;
                     edited = { text: txt };
-                    break;
                 }
-            }
+            });
 
             return edited;
         });
