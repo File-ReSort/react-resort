@@ -1,16 +1,29 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import DocEditor from '../components/DocEditor';
-import { MantineProvider, Anchor, Breadcrumbs, Container, Flex, Stepper } from '@mantine/core';
+import {
+    AppShell,
+    Button,
+    Center,
+    Container,
+    Flex,
+    Navbar,
+    Header,
+    Space,
+    Text,
+    Title,
+    MantineProvider,
+    Stack
+  } from '@mantine/core';
+import Link from 'next/link';
 
 const items = [
-    { title: 'Settings', href: '#' },
+    { title: 'Upload Files', href: '/upload/doc-editor' },
     { title: 'Link 2', href: '#' },
-    { title: 'Another Link', href: '#' },
+    { title: 'Link 3', href: '#' },
 ].map((item, index) => (
-    <Anchor href={item.href} key={index}>
+    <Link href={item.href} key={index}>
         {item.title}
-    </Anchor>
+    </Link>
 ));
 
 const Home = () => {
@@ -21,37 +34,39 @@ const Home = () => {
                 <link rel="icon" href="favicon.ico" />
             </Head>
 
-            <MantineProvider>
-                <div className={styles.container}>
-                    <div className={styles.apptop}>
-                        <Flex justify="center"><Breadcrumbs py={6}>{items}</Breadcrumbs></Flex>
-                        <Flex
-                            justify="center"
-                            align="center"
-                            direction="row"
-                            wrap="wrap"
-                            gap={80}
-                        >
-                            <Flex align="center" gap="lg" px={40}>
-                                <img src="logo.png" alt="logo" width="60" height="58" />
-                                <h1 className={styles.title}>File ReSort</h1>
-                            </Flex>
+            <MantineProvider
+                theme={{
+                    colors: {
+                        deepBlue: ['#E9EDFC', '#C1CCF6', '#99ABF0']
+                    },
+                    fontFamily: `'Archivo', sans-serif`,
+                    headings: {
+                        fontFamily: `'Archivo', sans-serif`,
+                    },
+                }}
+            >
 
-                            <Stepper color="blue.8" styles={{
-                                separator: {
-                                    width: 26
-                                },
-                            }} active={2}
-                            >
-                                <Stepper.Step label="Step 1" description="Upload Documents" />
-                                <Stepper.Step label="Step 2" description="Proofread and Edit" />
-                                <Stepper.Step label="Step 3" description="Finalize" />
-                            </Stepper>
-                        </Flex>
-                    </div>
-
-                    <DocEditor />
-                </div>
+                <Navbar p="md" width={{ sm: 200, lg: 300 }} style={{float: 'left'}}>
+                    <Navbar.Section><Text>navbar</Text></Navbar.Section>
+                </Navbar>
+                
+                <Container>
+                    <Flex px={40} py={20}>
+                        <Title>File ReSort</Title>
+                    </Flex>
+                    <Flex px={30} py={20} gap={60} align='center' justify='center'>
+                        <Stack>
+                            <Text>No files yet!</Text>
+                            
+                            <Link href="/upload/1">
+                                <Button variant="light" color="indigo" size="lg">
+                                    Get Started
+                                </Button>
+                            </Link>
+                        </Stack>
+                        <img src="No.png" width={300}/>
+                    </Flex>
+                </Container>
             </MantineProvider>
         </div>
     )

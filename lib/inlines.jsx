@@ -1,124 +1,13 @@
 import React from 'react'
-import { useState } from 'react'
 import { css } from '@emotion/css'
-import { Editable, withReact, useSlate, useSelected } from 'slate-react'
-import * as SlateReact from 'slate-react'
+import { useSlate, useSelected } from 'slate-react'
 import {
   Transforms,
   Editor,
   Range,
-  createEditor,
   Element as SlateElement
 } from 'slate'
-import { withHistory } from 'slate-history'
 import { Button, Icon, Toolbar } from './slate-components'
-
-const InlinesExample = ({ initialValue }) => {
-  
-  const [editor] = useState(
-    () => withInlines(withHistory(withReact(createEditor())))
-  );
-
-  const onKeyDown = event => {
-    const { selection } = editor
-
-    // Default left/right behavior is unit:'character'.
-    // This fails to distinguish between two cursor positions, such as
-    // <inline>foo<cursor/></inline> vs <inline>foo</inline><cursor/>.
-    // Here we modify the behavior to unit:'offset'.
-    // This lets the user step into and out of the inline without stepping over characters.
-    // You may wish to customize this further to only use unit:'offset' in specific cases.
-    if (selection && Range.isCollapsed(selection)) {
-      const { nativeEvent } = event
-      if (isKeyHotkey('left', nativeEvent)) {
-        event.preventDefault()
-        Transforms.move(editor, { unit: 'offset', reverse: true })
-        return
-      }
-      if (isKeyHotkey('right', nativeEvent)) {
-        event.preventDefault()
-        Transforms.move(editor, { unit: 'offset' })
-        return
-      }
-    }
-  }
-
-  return (
-    <SlateReact.Slate 
-      editor={editor}
-      value={initialValue}
-      onChange={value => {
-        const astChange = editor.operations.some(
-          op => 'set_selection' !== op.type
-        )
-        if (astChange) {
-          const content = JSON.stringify(value);
-          localStorage.setItem('content', content);
-          console.log(value);
-        }
-      }}
-    >
-      <Toolbar style={{
-        "backgroundColor": "#fff",
-        "borderBottom": "2px solid #2c4366",
-        "marginRight": "0px",
-        "paddingTop": "16px",
-        "textAlign": "center"
-      }}>
-        <AddLinkButton />
-        <RemoveLinkButton />
-        <ToggleEditableButtonButton />
-      </Toolbar>
-      <Editable
-        renderElement={props => <Element {...props} />}
-        renderLeaf={props => <Text {...props} />}
-        placeholder="Enter some text..."
-        onKeyDown={onKeyDown}
-        style={{
-          "backgroundColor": "#fff",
-          "margin": "auto",
-          "maxWidth": "800px",
-          "padding": "20px 40px",
-          "lineHeight": "1.4em",
-          "boxShadow": "2px 2px 2px #dee2e6"
-        }}
-      />
-    </SlateReact.Slate>
-  )
-}
-
-const withInlines = editor => {
-  const { insertData, insertText, isInline } = editor
-
-  editor.isInline = element =>
-    ['link', 'button'].includes(element.type) || isInline(element)
-
-  editor.insertText = text => {
-    if (text && isUrl(text)) {
-      wrapLink(editor, text)
-    } else {
-      insertText(text)
-    }
-  }
-
-  editor.insertData = data => {
-    const text = data.getData('text/plain')
-
-    if (text && isUrl(text)) {
-      wrapLink(editor, text)
-    } else {
-      insertData(data)
-    }
-  }
-
-  return editor
-}
-
-const insertLink = (editor, url) => {
-  if (editor.selection) {
-    wrapLink(editor, url)
-  }
-}
 
 const insertButton = editor => {
   if (editor.selection) {
@@ -142,39 +31,11 @@ const isButtonActive = editor => {
   return !!button
 }
 
-const unwrapLink = editor => {
-  Transforms.unwrapNodes(editor, {
-    match: n =>
-      !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'link',
-  })
-}
-
 const unwrapButton = editor => {
   Transforms.unwrapNodes(editor, {
     match: n =>
       !Editor.isEditor(n) && SlateElement.isElement(n) && n.type === 'button',
   })
-}
-
-const wrapLink = (editor, url) => {
-  if (isLinkActive(editor)) {
-    unwrapLink(editor)
-  }
-
-  const { selection } = editor
-  const isCollapsed = selection && Range.isCollapsed(selection)
-  const link = {
-    type: 'link',
-    url,
-    children: isCollapsed ? [{ text: url }] : [],
-  }
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, link)
-  } else {
-    Transforms.wrapNodes(editor, link, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
-  }
 }
 
 const wrapButton = editor => {
@@ -186,6 +47,7 @@ const wrapButton = editor => {
   const isCollapsed = selection && Range.isCollapsed(selection)
   const button = {
     type: 'button',
+    tag: 'PERSON',
     children: isCollapsed ? [{ text: 'Edit me!' }] : [],
   }
 
@@ -210,28 +72,25 @@ const InlineChromiumBugfix = () => (
   </span>
 )
 
-const LinkComponent = ({ attributes, children, element }) => {
-  const selected = useSelected()
-  return (
-    <a
-      {...attributes}
-      href={element.url}
-      className={
-        selected
-          ? css`
-              box-shadow: 0 0 0 3px #ddd;
-            `
-          : ''
-      }
-    >
-      <InlineChromiumBugfix />
-      {children}
-      <InlineChromiumBugfix />
-    </a>
-  )
-}
+export const EditableButtonComponent = ({ attributes, children, element }) => {
+  const val = element.value;
+  let color, border;
 
-const EditableButtonComponent = ({ attributes, children }) => {
+  switch (element.tag) {
+    case "PERSON":
+      color = "#f4e7ff";
+      border = "#ce94ff";
+      break;
+    case "ORGANIZATION":
+      color = "#e3ecff";
+      border = "#a9c5ff";
+      break;
+    default:
+      color = "#fff";
+      border = "#fff";
+      break;
+  }
+
   return (
     /*
       Note that this is not a true button, but a span with button-like CSS.
@@ -244,16 +103,20 @@ const EditableButtonComponent = ({ attributes, children }) => {
     */
     <span
       {...attributes}
+      value={val}
       onClick={ev => ev.preventDefault()}
       // Margin is necessary to clearly show the cursor adjacent to the button
       className={css`
         margin: 0 0.1em;
-        backgroundColor: #e7f5ff;
-        padding: 2px 6px;
+        background-color: #e7f5ff;
+        padding: 1px 6px;
         border: 1px solid #74c0fc;
-        fontSize: 0.9em;
-        lineHeight: 0.9em;
+        font-size: 0.9em;
       `}
+      style={{
+        backgroundColor: color,
+        border: `1px solid ${border}`
+      }}
     >
       <InlineChromiumBugfix />
       {children}
@@ -262,7 +125,7 @@ const EditableButtonComponent = ({ attributes, children }) => {
   )
 }
 
-const Element = props => {
+export const Element = props => {
   const { attributes, children, element } = props
   switch (element.type) {
     case 'link':
@@ -274,7 +137,7 @@ const Element = props => {
   }
 }
 
-const Text = props => {
+export const Text = props => {
   const { attributes, children, leaf } = props
   return (
     <span
@@ -297,41 +160,7 @@ const Text = props => {
   )
 }
 
-const AddLinkButton = () => {
-  const editor = useSlate()
-  return (
-    <Button
-      active={isLinkActive(editor)}
-      onMouseDown={event => {
-        event.preventDefault()
-        const url = window.prompt('Enter the URL of the link:')
-        if (!url) return
-        insertLink(editor, url)
-      }}
-    >
-      <Icon>link</Icon>
-    </Button>
-  )
-}
-
-const RemoveLinkButton = () => {
-  const editor = useSlate()
-
-  return (
-    <Button
-      active={isLinkActive(editor)}
-      onMouseDown={event => {
-        if (isLinkActive(editor)) {
-          unwrapLink(editor)
-        }
-      }}
-    >
-      <Icon>link_off</Icon>
-    </Button>
-  )
-}
-
-const ToggleEditableButtonButton = () => {
+export const ToggleEditableButtonButton = () => {
   const editor = useSlate()
   return (
     <Button
@@ -345,9 +174,27 @@ const ToggleEditableButtonButton = () => {
         }
       }}
     >
-      <Icon>add tag</Icon>
+      <Icon><img src="../tag.svg" width={16} height={16} /></Icon>
+      <span>Add Tags</span>
     </Button>
   )
 }
 
-export default InlinesExample
+export const onKeyDown = ({ event, editor }) => {
+  const { selection } = editor
+
+  if (selection && Range.isCollapsed(selection)) {
+
+    const { nativeEvent } = event
+    if (isKeyHotkey('left', nativeEvent)) {
+      event.preventDefault()
+      Transforms.move(editor, { unit: 'offset', reverse: true })
+      return
+    }
+    if (isKeyHotkey('right', nativeEvent)) {
+      event.preventDefault()
+      Transforms.move(editor, { unit: 'offset' })
+      return
+    }
+  }
+}
