@@ -10,7 +10,6 @@
 
 # next.js
 /.next/
-/out/
 
 # production
 /build
@@ -36,5 +35,4 @@ firebase-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.firebase
-.github
+/.github/
