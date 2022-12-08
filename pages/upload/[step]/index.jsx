@@ -9,7 +9,7 @@ export default function Upload() {
     const router = useRouter();
     const page = router.query.step;
     const Page = () => {
-        switch(page) {
+        switch (page) {
             case '2':
                 return (<DocEditor />);
             case '1':
@@ -26,7 +26,15 @@ export default function Upload() {
                 <link rel="icon" href="../favicon.ico" />
             </Head>
 
-            <MantineProvider>
+            <MantineProvider theme={{
+                globalStyles: (theme) => ({
+                    div: {
+                    '@media (max-width: 800px)': {
+                        backgroundColor: theme.colors.orange[6],
+                      },
+                    }
+                })
+            }}>
                 <div className={styles.container}>
                     <Header className={styles.apptop}>
                         <Flex
@@ -43,7 +51,7 @@ export default function Upload() {
                                 separator: {
                                     width: 26
                                 },
-                            }} active={page-1}
+                            }} active={page - 1}
                             >
                                 <Stepper.Step label="Step 1" description="Upload Documents" />
                                 <Stepper.Step label="Step 2" description="Edit Tags" />
@@ -51,7 +59,7 @@ export default function Upload() {
                             </Stepper>
                         </Flex>
                     </Header>
-                
+
                     <Page />
                 </div>
             </MantineProvider>

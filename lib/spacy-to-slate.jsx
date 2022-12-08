@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const UUID = () => uuidv4();
 
 export function getSlateJSON(spacy) {
-    const out = spacy["annotations"];
+    const out = spacy["body"];
 
     const blocks = out.map(item => {
         const block = {

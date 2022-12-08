@@ -36,8 +36,12 @@ const Home = () => {
 
             <MantineProvider
                 theme={{
-                    colors: {
-                        deepBlue: ['#E9EDFC', '#C1CCF6', '#99ABF0']
+                    breakpoints: {
+                        xs: 500,
+                        sm: 800,
+                        md: 1000,
+                        lg: 1200,
+                        xl: 1700,
                     },
                     fontFamily: `'Archivo', sans-serif`,
                     headings: {
@@ -46,7 +50,7 @@ const Home = () => {
                 }}
             >
 
-                <Navbar p="md" width={{ sm: 200, lg: 300 }} style={{float: 'left'}}>
+                <Navbar p="md" width={{ sm: 200, lg: 300, xl: 600 }} style={{float: 'left'}}>
                     <Navbar.Section><Text>navbar</Text></Navbar.Section>
                 </Navbar>
                 

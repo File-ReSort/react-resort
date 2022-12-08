@@ -2,22 +2,25 @@
 	font-family: 'Archivo', monospace;
 	background-color:#c7d7eb;
 	padding: 16px;
+	display: flex;
+	gap: 16px;
+	justify-content: center;
 }
 
 .text {
+	max-width: 1000px;
+}
+
+.txtContainer {
 	background-color:#fff;
 }
 
 .options {
 	background-color:#fff;
 	height: 100%;
+	max-width: 500px;
 }
 
 .section {
 	padding: 10px 16px 0 16px;
-}
-
-.tags {
-	height: 320px;
-	overflow-y: scroll;
 }
