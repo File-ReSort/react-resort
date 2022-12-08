@@ -12,12 +12,6 @@ import { useRouter } from 'next/router';
 
 const spacyOut = {
     "Meta": {
-        "BucketFileLocation": "https://file-resort-storage.s3.amazonaws.com/4c01f6c4-43a8-4142-910a-a95ed1786299-example.txt",
-        "UploadDate": "Tue Nov 29 18:37:07 2022",
-        "LastEditDate": "Tue Nov 29 18:37:07 2022",
-        "FileName": "example.txt",
-        "ID": "4c01f6c4-43a8-4142-910a-a95ed1786299",
-        "Name": "example.txt"
     },
     "body": [
         [
