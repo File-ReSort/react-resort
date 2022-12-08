@@ -19,8 +19,29 @@ body {
 }
 
 @font-face {
+  font-family: "Public Sans";
+  src: url('../public/fonts/Public_Sans/ttf/PublicSans-Regular.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Public Sans";
+  src: url('../public/fonts/Public_Sans/ttf/PublicSans-Bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
   font-family: "Wellfleet";
   src: url('../public/fonts/Wellfleet/Wellfleet-Regular.ttf');
   font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Zilla Slab";
+  src: url('../public/fonts/Zilla_Slab/ZillaSlab-SemiBold.ttf');
+  font-weight: 600;
   font-style: normal;
 }

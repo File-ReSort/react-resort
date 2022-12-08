@@ -1,20 +1,7 @@
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import {
-    AppShell,
-    Button,
-    Center,
-    Container,
-    Flex,
-    Navbar,
-    Header,
-    Space,
-    Text,
-    Title,
-    MantineProvider,
-    Stack
-  } from '@mantine/core';
 import Link from 'next/link';
+import styles from '../styles/Home.module.css';
+import { Placeholder } from 'semantic-ui-react';
 
 const items = [
     { title: 'Upload Files', href: '/upload/doc-editor' },
@@ -33,45 +20,40 @@ const Home = () => {
                 <title>File ReSort</title>
                 <link rel="icon" href="favicon.ico" />
             </Head>
+            <div className={styles.container}>
+                <div className={styles.HomeNav}>
+                    <div>navbar links</div>
 
-            <MantineProvider
-                theme={{
-                    breakpoints: {
-                        xs: 500,
-                        sm: 800,
-                        md: 1000,
-                        lg: 1200,
-                        xl: 1700,
-                    },
-                    fontFamily: `'Archivo', sans-serif`,
-                    headings: {
-                        fontFamily: `'Archivo', sans-serif`,
-                    },
-                }}
-            >
+                    <div>
+                        <Placeholder style={{ animationPlayState: "paused" }}>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+                    </div>
+                </div>
 
-                <Navbar p="md" width={{ sm: 200, lg: 300, xl: 600 }} style={{float: 'left'}}>
-                    <Navbar.Section><Text>navbar</Text></Navbar.Section>
-                </Navbar>
-                
-                <Container>
-                    <Flex px={40} py={20}>
-                        <Title>File ReSort</Title>
-                    </Flex>
-                    <Flex px={30} py={20} gap={60} align='center' justify='center'>
-                        <Stack>
-                            <Text>No files yet!</Text>
-                            
+                <div>
+                    <div>
+                        <h1>File ReSort</h1>
+                    </div>
+                    <div>
+                        <div>
+                            <div>No files yet!</div>
+
                             <Link href="/upload/1">
-                                <Button variant="light" color="indigo" size="lg">
+                                <button>
                                     Get Started
-                                </Button>
+                                </button>
                             </Link>
-                        </Stack>
-                        <img src="No.png" width={300}/>
-                    </Flex>
-                </Container>
-            </MantineProvider>
+                        </div>
+                        <img src="No.png" width={300} />
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

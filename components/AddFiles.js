@@ -1,31 +1,30 @@
-import { Button, Container, Flex, Loader, Tabs, Table, TextInput, Space } from "@mantine/core";
 import Link from "next/link";
 import { useState } from "react";
 
 export default function AddFiles() {
     const [visible, setVisible] = useState('none');
     return (
-        <Flex justify='center' py={40} style={{ backgroundColor: '#c7d7eb' }}>
-            <Container size="md" style={{
+        <div style={{
+            display: 'flex'
+        }}>
+            <div style={{
                 backgroundColor: '#fff',
                 padding: '40px 60px'
             }}>
-                <Tabs
+                <nav
                     defaultValue="first"
                 >
-                    <Tabs.List>
-                        <Tabs.Tab value="first">Try a Sample Document</Tabs.Tab>
-                        <Tabs.Tab value="second">File Upload</Tabs.Tab>
-                    </Tabs.List>
-                </Tabs>
-                
-                <Container py={30}>
-                    <TextInput
+                    <p>Try a Sample Document</p>
+                    <p>File Upload</p>
+                </nav>
+
+                <div>
+                    <input
                         placeholder="Enter document title here"
                         label="Title"
                     />
-                    <Space h={20} />
-                    <Table style={{ minWidth: '500px'}}>
+
+                    <table style={{ minWidth: '500px' }}>
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -40,18 +39,20 @@ export default function AddFiles() {
                                 <td></td>
                             </tr>
                         </tbody>
-                    </Table>
-                </Container>
+                    </table>
+                </div>
 
-                <Flex justify='right' py={20}>
-                    <Loader color="lime.3" variant="bars" style={{display: visible}} px={20}/>
+                <div style={{
+                    display: 'flex',
+                    justify: 'right'
+                }}>
                     <Link href="/upload/2">
-                        <Button color="indigo.6" size="md">
+                        <button>
                             Continue
-                        </Button>
+                        </button>
                     </Link>
-                </Flex>
-            </Container>
-        </Flex>
+                </div>
+            </div>
+        </div>
     );
 }

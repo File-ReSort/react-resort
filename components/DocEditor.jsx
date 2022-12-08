@@ -1,5 +1,4 @@
-import { ActionIcon, Button, Checkbox, Container, Flex, ScrollArea, Select, Space } from '@mantine/core';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import onKeyDown, { Element, Text, ToggleEditableButtonButton } from '../lib/inlines';
 import { deleteIDs, getSlateJSON, updateIDs } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
@@ -9,105 +8,7 @@ import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../styles/DocEditor.module.css';
 import { useRouter } from 'next/router';
-
-const spacyOut = {
-    "Meta": {
-    },
-    "body": [
-        [
-            "Â§1. Office of the Comptroller of the Currency\n(a) Office of the Comptroller of the Currency established\n\nThere is established in the Department of the Treasury a bureau to be known as the \"Office of the Comptroller of the Currency\" which is charged with assuring the safety and soundness of, and compliance with laws and regulations, fair access to financial services, and fair treatment of customers by, the institutions and other persons subject to its jurisdiction.\n(b) Comptroller of the Currency\n(1) In general\n\nThe chief officer of the Office of the Comptroller of the Currency shall be known as the Comptroller of the Currency. The Comptroller of the Currency shall perform the duties of the Comptroller of the Currency under the general direction of the Secretary of the Treasury. The Secretary of the Treasury may not delay or prevent the issuance of any rule or the promulgation of any regulation by the Comptroller of the Currency, and may not intervene in any matter or proceeding before the Comptroller of the Currency (including agency enforcement actions), unless otherwise specifically provided by law.\n\nThe Comptroller of the Currency is advised by the Secretary of the Treasury federal commerce",
-            {
-                "entities": [
-                    [
-                        5,
-                        46,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        51,
-                        92,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        134,
-                        160,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        190,
-                        231,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        474,
-                        501,
-                        "PERSON"
-                    ],
-                    [
-                        543,
-                        584,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        607,
-                        634,
-                        "PERSON"
-                    ],
-                    [
-                        640,
-                        667,
-                        "PERSON"
-                    ],
-                    [
-                        700,
-                        727,
-                        "PERSON"
-                    ],
-                    [
-                        763,
-                        788,
-                        "PERSON"
-                    ],
-                    [
-                        794,
-                        819,
-                        "PERSON"
-                    ],
-                    [
-                        915,
-                        942,
-                        "PERSON"
-                    ],
-                    [
-                        1005,
-                        1032,
-                        "PERSON"
-                    ],
-                    [
-                        1125,
-                        1152,
-                        "PERSON"
-                    ],
-                    [
-                        1171,
-                        1196,
-                        "PERSON"
-                    ],
-                    [
-                        1197,
-                        1204,
-                        "LEGAL_ORGANIZATION"
-                    ],
-                    [
-                        1205,
-                        1213,
-                        "CONCEPT"
-                    ]
-                ]
-            }
-        ]
-    ]
-}
+import { Form } from 'semantic-ui-react';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -137,14 +38,27 @@ const withInlines = editor => {
 }
 
 export default function DocEditor() {
-    const [data, setData] = useState(getSlateJSON(spacyOut));
+    const [data, setData] = useState([]);
     const [checked, setChecked] = useState([]);
     const [rules, setRules] = useState([]);
+    const router = useRouter();
     const editor = useMemo(
         () => withInlines(withHistory(withReact(createEditor()))),
         []
     );
-    const router = useRouter();
+    
+
+    useEffect(() => {
+        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=4c01f6c4-43a8-4142-910a-a95ed1786299')
+            .then((response) => response.json())
+            .then((res) => {
+                console.log(res);
+                setData(getSlateJSON(res));
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }, []);
 
     function handleChange(values) {
         const out = updateIDs(values);
@@ -152,6 +66,7 @@ export default function DocEditor() {
     }
 
     function handleDelete() {
+        console.log(checked);
         const out = deleteIDs(checked, data);
         setChecked([]);
         setData(out);
@@ -189,18 +104,16 @@ export default function DocEditor() {
 
     return (
         <div className={styles.editor}>
-            <Container className={styles.txtContainer}>
+            <div className={styles.txtContainer}>
                 <MyEditor />
-            </Container>
+            </div>
 
-            <Container className={styles.options}>
+            <div className={styles.options}>
                 <div className={styles.section}>
                     <h3>Entities</h3>
 
-                    <ScrollArea.Autosize maxHeight={400} type="always" offsetScrollbars scrollbarSize={14}>
-                        <Checkbox.Group
-                            orientation="vertical"
-                            spacing={0}
+                    <div>
+                        <Form.Group
                             value={checked}
                             onChange={setChecked}
                         >
@@ -210,42 +123,42 @@ export default function DocEditor() {
                                     const txt = child.children[0].text;
                                     const currentVal = child.value;
 
-                                    return ( <Checkbox key={currentVal} value={currentVal} label={txt} />);
+                                    return ( <Form.Checkbox key={currentVal} value={currentVal} label={txt} />);
                                 }
                             }))
                         }
-                        </Checkbox.Group>
-                    </ScrollArea.Autosize>
+                        </Form.Group>
+                    </div>
                         
-                    <Flex align="center" py={10} gap={6}>
-                        <ActionIcon color="dark" variant="light" onClick={handleDelete}>
+                    <div style={{display: 'flex'}}>
+                        <button onClick={handleDelete}>
                             <img src="../trash3.svg" height={16} width={16} />
-                        </ActionIcon>
+                        </button>
                         <span>{checked.length} selected</span>
-                    </Flex>
+                    </div>
                 </div>
 
                 <div className={styles.section}>
                     <h3>Rules</h3>
                     
-                    <Flex gap={4}>
-                        <Select data={[]} placeholder="Entity 1" />
-                        <Select data={[]} placeholder="Relationship" />
-                        <Select data={[]} placeholder="Entity 2" />
-                        <Button color="indigo.6">+</Button>
-                    </Flex>
+                    <Form.Group gap={4}>
+                        <select data={[]} placeholder="Entity 1" />
+                        <select data={[]} placeholder="Relationship" />
+                        <select data={[]} placeholder="Entity 2" />
+                        <button>+</button>
+                    </Form.Group>
                     {   
                         data.map(block => block.children.map(child => {
                         }))
                     }
                 </div>
-                <Space h={30} />
+
                 <div className={styles.section}>
-                    <Button onClick={handleSave} variant="gradient" gradient={{ from: 'lime', to: 'cyan', deg: 105 }}>
+                    <button onClick={handleSave}>
                         Save and Continue
-                    </Button>
+                    </button>
                 </div>
-            </Container>
+            </div>
         </div>
     );
 }
