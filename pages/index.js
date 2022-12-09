@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
-import { Placeholder } from 'semantic-ui-react';
+import { Button, Placeholder } from 'semantic-ui-react';
 
 const items = [
     { title: 'Upload Files', href: '/upload/doc-editor' },
@@ -33,25 +33,43 @@ const Home = () => {
                                 <Placeholder.Line />
                             </Placeholder.Paragraph>
                         </Placeholder>
+
+                        <Placeholder style={{ animationPlayState: "paused" }}>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                            </Placeholder.Paragraph>
+                        </Placeholder>
+
+                        <Placeholder style={{ animationPlayState: "paused" }}>
+                            <Placeholder.Paragraph>
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                                <Placeholder.Line />
+                            </Placeholder.Paragraph>
+                        </Placeholder>
                     </div>
                 </div>
 
-                <div>
-                    <div>
+                <div className={styles.NonNav}>
+                    <div className={styles.HomeHeader}>
                         <h1>File ReSort</h1>
                     </div>
-                    <div>
-                        <div>
-                            <div>No files yet!</div>
 
-                            <Link href="/upload/1">
-                                <button>
-                                    Get Started
-                                </button>
-                            </Link>
-                        </div>
-                        <img src="No.png" width={300} />
+                    <div className={styles.HomeContent}>
+                        <div>No files yet!</div>
+
+                        <Link href="/upload/1">
+                            <Button primary>
+                                Get Started
+                            </Button>
+                        </Link>
                     </div>
+
+                    <div className={styles.HomeContent}><img src="No.png" width={300} /></div>
                 </div>
             </div>
         </div>

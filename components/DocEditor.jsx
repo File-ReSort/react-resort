@@ -37,8 +37,112 @@ const withInlines = editor => {
     return editor
 }
 
+const spacyTest = {
+        "Meta": {
+            "BucketFileLocation": "https://file-resort-storage.s3.amazonaws.com/4c01f6c4-43a8-4142-910a-a95ed1786299-example.txt",
+            "UploadDate": "Tue Nov 29 18:37:07 2022",
+            "LastEditDate": "Tue Nov 29 18:37:07 2022",
+            "FileName": "example.txt",
+            "ID": "4c01f6c4-43a8-4142-910a-a95ed1786299",
+            "Name": "example.txt"
+        },
+        "body": [
+            [
+                "Â§1. Office of the Comptroller of the Currency\n(a) Office of the Comptroller of the Currency established\n\nThere is established in the Department of the Treasury a bureau to be known as the \"Office of the Comptroller of the Currency\" which is charged with assuring the safety and soundness of, and compliance with laws and regulations, fair access to financial services, and fair treatment of customers by, the institutions and other persons subject to its jurisdiction.\n(b) Comptroller of the Currency\n(1) In general\n\nThe chief officer of the Office of the Comptroller of the Currency shall be known as the Comptroller of the Currency. The Comptroller of the Currency shall perform the duties of the Comptroller of the Currency under the general direction of the Secretary of the Treasury. The Secretary of the Treasury may not delay or prevent the issuance of any rule or the promulgation of any regulation by the Comptroller of the Currency, and may not intervene in any matter or proceeding before the Comptroller of the Currency (including agency enforcement actions), unless otherwise specifically provided by law.\n\nThe Comptroller of the Currency is advised by the Secretary of the Treasury federal commerce",
+                {
+                    "entities": [
+                        [
+                            5,
+                            46,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            51,
+                            92,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            134,
+                            160,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            190,
+                            231,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            474,
+                            501,
+                            "PERSON"
+                        ],
+                        [
+                            543,
+                            584,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            607,
+                            634,
+                            "PERSON"
+                        ],
+                        [
+                            640,
+                            667,
+                            "PERSON"
+                        ],
+                        [
+                            700,
+                            727,
+                            "PERSON"
+                        ],
+                        [
+                            763,
+                            788,
+                            "PERSON"
+                        ],
+                        [
+                            794,
+                            819,
+                            "PERSON"
+                        ],
+                        [
+                            915,
+                            942,
+                            "PERSON"
+                        ],
+                        [
+                            1005,
+                            1032,
+                            "PERSON"
+                        ],
+                        [
+                            1125,
+                            1152,
+                            "PERSON"
+                        ],
+                        [
+                            1171,
+                            1196,
+                            "PERSON"
+                        ],
+                        [
+                            1197,
+                            1204,
+                            "LEGAL_ORGANIZATION"
+                        ],
+                        [
+                            1205,
+                            1213,
+                            "CONCEPT"
+                        ]
+                    ]
+                }
+            ]
+        ]
+    }
 export default function DocEditor() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState(getSlateJSON(spacyTest));
     const [checked, setChecked] = useState([]);
     const [rules, setRules] = useState([]);
     const router = useRouter();
@@ -47,7 +151,7 @@ export default function DocEditor() {
         []
     );
     
-
+/*
     useEffect(() => {
         fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=4c01f6c4-43a8-4142-910a-a95ed1786299')
             .then((response) => response.json())
@@ -59,7 +163,7 @@ export default function DocEditor() {
                 console.log(err.message);
             });
     }, []);
-
+*/
     function handleChange(values) {
         const out = updateIDs(values);
         setData(out);
@@ -73,9 +177,21 @@ export default function DocEditor() {
     }
 
     function handleSave() {
-        const jsonDoc = JSON.stringify(data);
-        console.log(jsonDoc);
-        window.localStorage.setItem('jsonDoc', jsonDoc);
+        const out = data[0].children;
+        const tags = [];
+
+        out.forEach((obj) => {
+            if (obj.type == "button") {
+                tags.push({
+                    tag: obj.tag,
+                    value: obj.value,
+                    text: obj.children[0].text
+                })
+            }
+        });
+
+        const tagStorage = JSON.stringify(tags);
+        window.localStorage.setItem('tagStorage', tagStorage);
         router.push('/upload/3')
     }
 
@@ -83,7 +199,7 @@ export default function DocEditor() {
         return (
             <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                 <Toolbar style={{
-                    paddingTop: "16px",
+                    paddingTop: "10px",
                     textAlign: "right"
                 }}>
                     <ToggleEditableButtonButton />
@@ -123,7 +239,7 @@ export default function DocEditor() {
                                     const txt = child.children[0].text;
                                     const currentVal = child.value;
 
-                                    return ( <Form.Checkbox key={currentVal} value={currentVal} label={txt} />);
+                                    return ( <Form.Field key={currentVal} value={currentVal} label={txt} control='input' type='checkbox' />);
                                 }
                             }))
                         }
