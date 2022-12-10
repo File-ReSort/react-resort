@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import onKeyDown, { Element, Text, ToggleEditableButtonButton } from '../lib/inlines';
-import { deleteIDs, getSlateJSON, updateIDs } from '../lib/spacy-to-slate';
+import { initCheck, deleteIDs, getSlateJSON, updateIDs, Checkboxes } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
 import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
@@ -8,7 +8,7 @@ import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../styles/DocEditor.module.css';
 import { useRouter } from 'next/router';
-import { Form } from 'semantic-ui-react';
+import { Checkbox, Form } from 'semantic-ui-react';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -141,9 +141,11 @@ const spacyTest = {
             ]
         ]
     }
+
+
 export default function DocEditor() {
     const [data, setData] = useState(getSlateJSON(spacyTest));
-    const [checked, setChecked] = useState([]);
+    const [checked, setChecked] = useState(initCheck(data));
     const [rules, setRules] = useState([]);
     const router = useRouter();
     const editor = useMemo(
@@ -164,16 +166,28 @@ export default function DocEditor() {
             });
     }, []);
 */
-    function handleChange(values) {
-        const out = updateIDs(values);
-        setData(out);
+    
+
+    function handleChange(event) {
+        const ID = event.target.id;
+        const newChecked = checked;
+        const index = newChecked.findIndex((box) => box.value == ID);
+        newChecked[index].checked = !(newChecked[index].checked);
+
+        console.log(checked);
+        setChecked(newChecked);
     }
 
     function handleDelete() {
-        console.log(checked);
-        const out = deleteIDs(checked, data);
-        setChecked([]);
-        setData(out);
+        const IDs = [];
+        
+        checked.forEach(box => {
+            if (box.checked == true) {
+                IDs.push(box.value);
+            }
+        })
+
+        setData(deleteIDs(IDs, data));
     }
 
     function handleSave() {
@@ -193,6 +207,13 @@ export default function DocEditor() {
         const tagStorage = JSON.stringify(tags);
         window.localStorage.setItem('tagStorage', tagStorage);
         router.push('/upload/3')
+    }
+    
+    const Checkboxes = () => {
+        const boxes = initCheck(data);
+        return boxes.map((box) => (
+            <div><Checkbox id={box.value} key={box.value} label={box.text} onChange={handleChange}/></div>
+        ))
     }
 
     const MyEditor = () => {
@@ -228,22 +249,8 @@ export default function DocEditor() {
                 <div className={styles.section}>
                     <h3>Entities</h3>
 
-                    <div>
-                        <Form.Group
-                            value={checked}
-                            onChange={setChecked}
-                        >
-                        {   
-                            data.map(block => block.children.map(child => {
-                                if (child.children) {
-                                    const txt = child.children[0].text;
-                                    const currentVal = child.value;
-
-                                    return ( <Form.Field key={currentVal} value={currentVal} label={txt} control='input' type='checkbox' />);
-                                }
-                            }))
-                        }
-                        </Form.Group>
+                    <div className={styles.tagList}>
+                        <Checkboxes />
                     </div>
                         
                     <div style={{display: 'flex'}}>

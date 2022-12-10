@@ -1,13 +1,17 @@
 .editor {
 	font-family: 'Archivo', monospace;
 	background-color:#c7d7eb;
-
 	display: flex;
 	gap: 16px;
 	justify-content: center;
 	height: 100%;
 }
 
+.tagList {
+	display: block;
+	height: 500px;
+	overflow-y: scroll;
+}
 .txtContainer {
 	margin: 16px;
 	margin-right: 0;

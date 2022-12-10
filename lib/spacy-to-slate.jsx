@@ -13,7 +13,7 @@ export function getSlateJSON(spacy) {
         const text = item[0];
         const entities = item[1]["entities"];
         const len = entities.length;
-        
+
 
         if (len == 0) {
             block.children.push({
@@ -45,6 +45,22 @@ export function getSlateJSON(spacy) {
     });
 
     return blocks;
+}
+
+export function initCheck(data) {
+    const newChecked = [];
+
+    data.map(block => block.children.map(child => {
+        if (child.children) {
+            const txt = child.children[0].text;
+            const currentVal = child.value;
+
+            newChecked.push({ value: currentVal, checked: false, text: txt });
+        }
+    }));
+
+    console.log(newChecked);
+    return newChecked;
 }
 
 export function updateIDs(data) {
@@ -86,6 +102,6 @@ export function deleteIDs(IDs, data) {
 
         out.push({ type: "paragraph", children: res });
     });
-    
+
     return out;
 }
