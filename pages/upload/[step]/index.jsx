@@ -1,21 +1,24 @@
 import Head from 'next/head';
-import { MantineProvider, Anchor, Breadcrumbs, Container, Flex, Header, Stepper } from '@mantine/core';
-import styles from '../../../styles/Upload.module.css';
+import styles from '../../../styles/Upload.module.css'
 import { useRouter } from 'next/router';
 import AddFiles from '../../../components/AddFiles';
 import DocEditor from '../../../components/DocEditor';
+import Finalize from '../../../components/Finalize';
+import { Step } from 'semantic-ui-react';
 
 export default function Upload() {
     const router = useRouter();
     const page = router.query.step;
+    //const [data, setData] = useState();
+
     const Page = () => {
-        switch(page) {
-            case '2':
-                return (<DocEditor />);
+        switch (page) {
             case '1':
                 return (<AddFiles />);
+            case '2':
+                return (<DocEditor />);
             case '3':
-                return (<></>);
+                return (<Finalize />);
         }
     };
 
@@ -25,36 +28,38 @@ export default function Upload() {
                 <title>File ReSort</title>
                 <link rel="icon" href="../favicon.ico" />
             </Head>
+            <div className={styles.container}>
+                <div className={styles.AppTop}>
+                    <img src="../logo.png" alt="logo" width="58" height="54" />
+                    <h1 id={styles.header}>File ReSort</h1>
 
-            <MantineProvider>
-                <div className={styles.container}>
-                    <Header className={styles.apptop}>
-                        <Flex
-                            justify="center"
-                            align="center"
-                            gap={40}
-                        >
-                            <Flex align="center" gap="lg" px={40}>
-                                <img src="../logo.png" alt="logo" width="50" height="48" />
-                                <h1 className={styles.title}>File ReSort</h1>
-                            </Flex>
+                    <div>
+                        <Step.Group ordered>
+                            <Step active={page === '1'}>
+                            <Step.Content>
+                                <Step.Title>Upload Files</Step.Title>
+                            </Step.Content>
+                            </Step>
 
-                            <Stepper color="indigo.6" radius="sm" size="md" styles={{
-                                separator: {
-                                    width: 26
-                                },
-                            }} active={page-1}
-                            >
-                                <Stepper.Step label="Step 1" description="Upload Documents" />
-                                <Stepper.Step label="Step 2" description="Edit Tags" />
-                                <Stepper.Step label="Step 3" description="Finalize" />
-                            </Stepper>
-                        </Flex>
-                    </Header>
-                
+                            <Step active={page === '2'}>
+                            <Step.Content>
+                                <Step.Title>Review and Edit</Step.Title>
+                            </Step.Content>
+                            </Step>
+
+                            <Step active={page === '3'}>
+                            <Step.Content>
+                                <Step.Title>Finalize</Step.Title>
+                            </Step.Content>
+                            </Step>
+                        </Step.Group>
+                    </div>
+                </div>
+
+                <div>
                     <Page />
                 </div>
-            </MantineProvider>
+            </div>
         </div>
 
     );

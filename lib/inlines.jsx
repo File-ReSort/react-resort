@@ -81,7 +81,11 @@ export const EditableButtonComponent = ({ attributes, children, element }) => {
       color = "#f4e7ff";
       border = "#ce94ff";
       break;
-    case "ORGANIZATION":
+    case "LEGAL_ORGANIZATION":
+      color = "#e3ecff";
+      border = "#a9c5ff";
+      break;
+    case "CONCEPT":
       color = "#e3ecff";
       border = "#a9c5ff";
       break;

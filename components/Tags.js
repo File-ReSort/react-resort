@@ -1,9 +1,9 @@
-import { Checkbox } from "@mantine/core";
 import React from "react";
+import { Form } from "semantic-ui-react";
 
 export default function Tags({obj, onChange}) {
     return (
-        <Checkbox.Group onChange={onChange}>
+        <Form.Group onChange={onChange}>
             {obj.map(block =>
                 block.children.map(child => {
                     if (child.children) {
@@ -12,11 +12,11 @@ export default function Tags({obj, onChange}) {
                         console.log(JSON.stringify(currentVal));
         
                         return (
-                            <Checkbox value={currentVal} label={txt} />
+                            <Form.Checkbox value={currentVal} label={txt} />
                         );
                     }
                 })
             )}
-        </Checkbox.Group>
+        </Form.Group>
     );
 }
