@@ -111,11 +111,12 @@ export const EditableButtonComponent = ({ attributes, children, element }) => {
       onClick={ev => ev.preventDefault()}
       // Margin is necessary to clearly show the cursor adjacent to the button
       className={css`
-        margin: 0 0.1em;
+        margin: 0;
         background-color: #e7f5ff;
         padding: 1px 6px;
         border: 1px solid #74c0fc;
         font-size: 0.9em;
+        line-height: 0.9;
       `}
       style={{
         backgroundColor: color,

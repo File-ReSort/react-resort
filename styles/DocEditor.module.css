@@ -27,8 +27,9 @@
 	margin-left: 0;
 	background-color:#fff;
 	width: 500px;
+	padding: 10px;
 }
 
 .section {
-	padding: 10px 16px 0 16px;
+	padding: 10px 16px;
 }

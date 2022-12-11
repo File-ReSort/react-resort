@@ -1,44 +1,53 @@
-import { useRouter } from 'next/router';
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { Button, Container, Menu } from 'semantic-ui-react';
 import styles from '../styles/AddFiles.module.css';
-import UserUpload from './UserUpload.jsx';
+import UserUpload from './UserUpload';
 
 export default function AddFiles() {
     const [selection, setSelection] = useState(0);
-    const router = useRouter();
+    const [navigate, doNavigation] = useState(0);
 
-    const ExampleFile = () => {
-        return (
-            <Container>
-                <Button primary onClick={() => router.push('/upload/2')}>Continue</Button>
-            </Container>
-        )
+    const router2 = useRouter();
+
+    function handleClick() {
+        if (selection === 1) {
+            doNavigation(1);
+        } else {
+            router2.push('/upload/2');
+        }
     }
 
-    const Page = () => {
-        switch (selection) {
-            case 0:
-                return (<ExampleFile />);
-            case 1:
-                return (<UserUpload />);
-            case 2:
-                return (<></>);
-        }
-    };
+    const Stage = () => {
+        if (navigate === 0) {
+            return (
+                <div>
+                    <div className={styles.Inner}>
+                        <h3 className={styles.Title}>What would you like to do?</h3>
 
-    function changeSelection(selected) {
-        setSelection(selected);
+                        <Menu secondary>
+                            <Menu.Item name='Try a Sample File' active={selection === 0} onClick={() => setSelection(0)} />
+                            <Menu.Item name='Upload a File' active={selection === 1} onClick={() => setSelection(1)} disabled />
+                        </Menu>
+                    </div>
+                    <div className={styles.Continue}>
+                        <div></div>
+                        <Button primary onClick={() => handleClick()}>Next</Button>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <>
+                    <UserUpload />
+                </>
+            )
+        }
     }
 
     return (
-        <Container className={styles.UploadContainer}>
-            <Menu pointing secondary>
-                <Menu.Item name='Try a Sample File' active={selection === 0} onClick={() => setSelection(0)} />
-                <Menu.Item name='Upload a File' active={selection === 1} onClick={() => setSelection(1)} disabled />
-                <Menu.Item name='Enter Text' active={selection === 2} onClick={() => setSelection(2)} disabled />
-            </Menu>
-            <Page />
-        </Container>
+        <div className={styles.UploadContainer}>
+            <Stage />
+        </div>
     );
 }
