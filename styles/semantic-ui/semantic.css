@@ -8,7 +8,7 @@
  * http://opensource.org/licenses/MIT
  *
  */
-@import url('https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic&subset=latin');
+
 /*!
  * # Semantic UI 2.5.0 - Reset
  * http://github.com/semantic-org/semantic-ui/
@@ -33,17 +33,6 @@
 
 html {
   box-sizing: border-box;
-}
-
-/* iPad Input Shadows */
-
-input[type="text"],
-input[type="email"],
-input[type="search"],
-input[type="password"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  /* mobile firefox too! */
 }
 
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
@@ -340,20 +329,6 @@ select {
 }
 
 /**
- * 1. Prevent a WebKit bug where (2) destroys native `audio` and `video`
- *    controls in Android 4.
- * 2. Correct the inability to style clickable types in iOS and Safari.
- */
-
-button,
-html [type="button"],
-[type="reset"],
-[type="submit"] {
-  -webkit-appearance: button;
-  /* 2 */
-}
-
-/**
  * Remove the inner border and padding in Firefox.
  */
 
@@ -446,18 +421,6 @@ textarea {
 [type="number"]::-webkit-inner-spin-button,
 [type="number"]::-webkit-outer-spin-button {
   height: auto;
-}
-
-/**
- * 1. Correct the odd appearance in Chrome and Safari.
- * 2. Correct the outline style in Safari.
- */
-
-[type="search"] {
-  -webkit-appearance: textfield;
-  /* 1 */
-  outline-offset: -2px;
-  /* 2 */
 }
 
 /**
@@ -18890,8 +18853,6 @@ ol.ui.horizontal.list li:before,
   background: '';
   box-shadow: none;
   line-height: 1.14285714em;
-  border-radius: 0.28571429rem;
-  border: 1px solid rgba(34, 36, 38, 0.15);
 }
 
 /* First Steps */
@@ -18922,11 +18883,10 @@ ol.ui.horizontal.list li:before,
   margin: 0em 0em;
   padding: 1.14285714em 2em;
   background: #FFFFFF;
-  color: rgba(0, 0, 0, 0.87);
+  color: #C6C6C6;
   box-shadow: none;
   border-radius: 0em;
   border: none;
-  border-right: 1px solid rgba(34, 36, 38, 0.15);
   transition: background-color 0.1s ease, opacity 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
 }
 
@@ -18943,11 +18903,7 @@ ol.ui.horizontal.list li:before,
   background-color: #FFFFFF;
   width: 1.14285714em;
   height: 1.14285714em;
-  border-style: solid;
-  border-color: rgba(34, 36, 38, 0.15);
-  border-width: 0px 1px 1px 0px;
   transition: background-color 0.1s ease, opacity 0.1s ease, color 0.1s ease, box-shadow 0.1s ease;
-  transform: translateY(-50%) translateX(50%) rotate(-45deg);
 }
 
 /* First Step */
@@ -19197,28 +19153,22 @@ ol.ui.horizontal.list li:before,
 .ui.steps .link.step:active,
 .ui.steps a.step:active::after,
 .ui.steps a.step:active {
-  background: #F3F4F5;
-  color: rgba(0, 0, 0, 0.9);
+  color: #000;
 }
 
 /* Active */
 
 .ui.steps .step.active {
   cursor: auto;
-  background: #F3F4F5;
-}
-
-.ui.steps .step.active:after {
-  background: #F3F4F5;
 }
 
 .ui.steps .step.active .title {
-  color: #4183C4;
+  color: #333;
 }
 
 .ui.ordered.steps .step.active:before,
 .ui.steps .active.step .icon {
-  color: rgba(0, 0, 0, 0.85);
+  color: #000;
 }
 
 /* Active Arrow */
@@ -19734,7 +19684,6 @@ ol.ui.horizontal.list li:before,
   font-family: 'Public Sans', sans-serif;
   margin: 0em;
   outline: none;
-  -webkit-appearance: none;
   line-height: 1.21428571em;
   padding: 0.67857143em 1em;
   font-size: 1em;
@@ -19750,7 +19699,6 @@ ol.ui.horizontal.list li:before,
 
 .ui.form textarea {
   margin: 0em;
-  -webkit-appearance: none;
   padding: 0.78571429em 1em;
   background: #FFFFFF;
   border: 1px solid rgba(34, 36, 38, 0.15);
@@ -20023,7 +19971,6 @@ ol.ui.horizontal.list li:before,
   border-radius: 0.28571429rem;
   background: #FFFFFF;
   box-shadow: 0px 0em 0em 0em rgba(34, 36, 38, 0.35) inset;
-  -webkit-appearance: none;
 }
 
 /*--------------------
@@ -20147,14 +20094,7 @@ ol.ui.horizontal.list li:before,
   background: #FFF6F6;
   border-color: #E0B4B4;
   color: #9F3A38;
-  -webkit-appearance: none;
   box-shadow: none;
-}
-
-/* Preserve Native Select Stylings */
-
-.ui.form .field.error select {
-  -webkit-appearance: menulist-button;
 }
 
 /*------------------
@@ -25405,7 +25345,6 @@ Floated Menu / Item
   flex: 0 0 auto;
   width: auto;
   line-height: 1;
-  vertical-align: middle;
   font-size: 3em;
   opacity: 0.8;
 }
@@ -25413,7 +25352,6 @@ Floated Menu / Item
 .ui.icon.message > .content {
   display: block;
   flex: 1 1 auto;
-  vertical-align: middle;
 }
 
 .ui.icon.message .icon:not(.close) + .content {
@@ -35340,7 +35278,6 @@ a.ui.nag {
 .ui.search > .prompt {
   margin: 0em;
   outline: none;
-  -webkit-appearance: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
   text-shadow: none;
   font-style: normal;

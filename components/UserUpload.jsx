@@ -2,15 +2,17 @@ import { useState } from "react";
 import 'uikit/dist/css/uikit.min.css';
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
-import { Container } from 'semantic-ui-react';
-//import Link from "next/link";
+import { Button, Container } from 'semantic-ui-react';
+import styles from '../styles/AddFiles.module.css';
+import Link from "next/link";
+//import { useRouter } from 'next/router';
 
 export default function UserUpload() {
     const [name, setName] = useState('');
     const [title, setTitle] = useState('');
-
+    //const router = useRouter();
     UIkit.use(Icons);
-
+    
     const Name = () => {
         return name === '' ? (<label></label>) : (<label> {name} <span uk-icon="check"></span></label>);
     }
@@ -41,26 +43,27 @@ export default function UserUpload() {
     }
 
     return (
-        <Container>
+        <div>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <div className="js-upload" data-uk-form-custom>
+                <div className={styles.Inner}>
+                    <div className="js-upload" style={{width: '100%', paddingBottom: '20px'}} data-uk-form-custom>
                         <label className="uk-form-label" style={{ display: 'block' }}>Upload a File</label>
                         <input id="upload" type="file" accept=".txt" onChange={handleChange} />
                         <button className="uk-button uk-button-default" type="button">Select</button>
                         <Name />
                     </div>
 
-                    <div>
+                    <div style={{width: '100%'}}>
                         <label className="uk-form-label">Document Title</label>
                         <input className="uk-input" placeholder="Give the document a title" value={title} onChange={handleTitle} />
                     </div>
                 </div>
 
-                <div>
-                    <button type="submit" className="uk-button uk-button-primary">Continue</button>
+                <div className={styles.Continue}>
+                    <Link href="/upload/1"><Button>Back</Button></Link>
+                    <Button primary type="submit">Review and Edit</Button>
                 </div>
             </form>
-        </Container>
+        </div>
     );
 }
