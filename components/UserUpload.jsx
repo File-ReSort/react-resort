@@ -8,24 +8,6 @@ import Link from "next/link";
 import DOMPurify from 'dompurify';
 //import { useRouter } from 'next/router';
 
-function fetchData(document) {
-    const docText = sanitizeInput(document);
-    /*
-    fetch(`https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/processor/processDocument?url=`
-        + N4J_URL + `&username=` + N4J_USER + `&password=` + N4J_PASS + `&name="` + title + `"`)
-        .then((response) => response.json())
-        .then((res) => {
-            console.log(res);
-            return (getSlateJSON(res));
-        })
-        .catch((err) => {
-            console.log(err.message);
-            return (err.message);
-        });
-    */
-    return docText;
-}
-
 export default function UserUpload() {
     const [title, setTitle] = useState('');
     const [invalidTitle, setInvalidTitle] = useState(false);
@@ -60,13 +42,25 @@ export default function UserUpload() {
         if ((userTitle.length < 1) || userTitle == null) {
             setInvalidTitle(true);
         } else if (docText) {
-            const txt = DOMPurify.sanitize(docText);
+            const form = new FormData();
+            formData.append('file', 'Chris');
             console.log(txt);
+
+            fetch(`https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/processor/processDocumentAnnotations?url=`
+                + process.env.N4J_URL + `&username=neo4j&password=` + process.env.N4J_PASS + `&name=` + title, {
+                    method: 'POST',
+                    body: form
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                    return (err.message);
+                });
         }
     }
 
     useEffect(() => {
         if (userDoc) {
+
             userDoc.text().then((res) => {
                 setDocText(res);
             });
