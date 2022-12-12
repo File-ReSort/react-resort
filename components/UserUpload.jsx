@@ -6,7 +6,7 @@ import { Button, Container } from 'semantic-ui-react';
 import styles from '../styles/AddFiles.module.css';
 import Link from "next/link";
 import DOMPurify from 'dompurify';
-//import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function UserUpload() {
     const [title, setTitle] = useState('');
@@ -14,6 +14,7 @@ export default function UserUpload() {
     const [userDoc, setUserDoc] = useState(false);
     const [docText, setDocText] = useState('');
 
+    const router = useRouter();
     UIkit.use(Icons);
 
     const Name = () => {
@@ -38,34 +39,34 @@ export default function UserUpload() {
     function handleSubmit(e) {
         e.preventDefault();
         const userTitle = title.trim();
+        var formdata = new FormData();
+        var requestOptions =
+        {
+            method: 'POST',
+            body: formdata,
+            redirect: 'follow'
+        };
 
-        if ((userTitle.length < 1) || userTitle == null) {
+        if ((userTitle.length < 1)) {
             setInvalidTitle(true);
-        } else if (docText) {
-            const form = new FormData();
-            formData.append('file', 'Chris');
-            console.log(txt);
+        } else {
+            if (userDoc) {
+                formdata.append("file", userDoc);
 
-            fetch(`https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/processor/processDocumentAnnotations?url=`
-                + process.env.N4J_URL + `&username=neo4j&password=` + process.env.N4J_PASS + `&name=` + title, {
-                    method: 'POST',
-                    body: form
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                    return (err.message);
-                });
+                fetch("https://fileresortproc.ngrok.io/processor/getAnnotations", requestOptions)
+                    .then(response => response.text())
+                    .then(result => {
+                        (window.localStorage.setItem('tagStorage', result))
+                        router.push('/upload/2');
+                    })
+                    .catch(error => console.log('error', error));
+            }
+
+            setInvalidTitle(false);
         }
     }
 
-    useEffect(() => {
-        if (userDoc) {
 
-            userDoc.text().then((res) => {
-                setDocText(res);
-            });
-        }
-    });
 
     return (
         <div>

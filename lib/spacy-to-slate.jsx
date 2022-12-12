@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const UUID = () => uuidv4();
 
 export function getSlateJSON(spacy) {
-    const out = spacy["body"];
+    const out = spacy["annotations"];
 
     const blocks = out.map(item => {
         const block = {
@@ -27,18 +27,22 @@ export function getSlateJSON(spacy) {
 
         entities.forEach(entity => {
             start = entity[0];
+            const ignore = ["DATE", "WORK_OF_ART", "CARDINAL"];
             const between = text.slice(end, start);
             block.children.push({ text: between });
-            //console.log(uuid);
-
             end = entity[1];
             const btnText = text.slice(start, end);
-            block.children.push({
-                type: 'button',
-                tag: entity[2],
-                value: UUID(),
-                children: [{ text: btnText }]
-            });
+
+            if (ignore.includes(entity[2])) {
+                block.children.push({ text: btnText });
+            } else {
+                block.children.push({
+                    type: 'button',
+                    tag: entity[2],
+                    value: UUID(),
+                    children: [{ text: btnText }]
+                });
+            }
         })
 
         return block;
@@ -59,7 +63,6 @@ export function initCheck(data) {
         }
     }));
 
-    console.log(newChecked);
     return newChecked;
 }
 
