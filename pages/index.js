@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 import { Button, Placeholder } from 'semantic-ui-react';
+import  Navigation from '../components/Navigation'
 
 const items = [
     { title: 'Upload Files', href: '/upload/doc-editor' },
@@ -21,38 +22,8 @@ const Home = () => {
                 <link rel="icon" href="favicon.ico" />
             </Head>
             <div className={styles.container}>
-                <div className={styles.HomeNav}>
-                    <div>navbar links</div>
-
-                    <div>
-                        <Placeholder style={{ animationPlayState: "paused" }}>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                            </Placeholder.Paragraph>
-                        </Placeholder>
-
-                        <Placeholder style={{ animationPlayState: "paused" }}>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                            </Placeholder.Paragraph>
-                        </Placeholder>
-
-                        <Placeholder style={{ animationPlayState: "paused" }}>
-                            <Placeholder.Paragraph>
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                                <Placeholder.Line />
-                            </Placeholder.Paragraph>
-                        </Placeholder>
-                    </div>
-                </div>
+                
+                <Navigation />
 
                 <div className={styles.NonNav}>
                     <div className={styles.HomeHeader}>
@@ -65,6 +36,11 @@ const Home = () => {
                         <Link href="/upload/1">
                             <Button primary>
                                 Get Started
+                            </Button>
+                        </Link>
+                        <Link href="/documents">
+                            <Button primary>
+                                View files
                             </Button>
                         </Link>
                     </div>

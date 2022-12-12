@@ -1,0 +1,35 @@
+.container {
+	display: flex;
+	height: 100vh;
+}
+
+.title {
+	font-family: 'Wellfleet';
+	font-size: 30px;
+}
+
+.HomeContent {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+}
+
+.HomeHeader {
+	display: flex;
+	padding: 20px;
+	border-bottom: 2px solid #000000;
+}
+
+.HomeNav {
+	border-right: 2px solid #000000;
+	height: 100%;
+	width: 40%;
+	max-width: 480px;
+	padding: 20px;
+}
+
+.NonNav {
+	width: 100%;
+}
