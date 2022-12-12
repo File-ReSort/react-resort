@@ -27,7 +27,7 @@ export default function AddFiles() {
 
                         <Menu secondary>
                             <Menu.Item name='Try a Sample File' active={selection === 0} onClick={() => setSelection(0)} />
-                            <Menu.Item name='Upload a File' active={selection === 1} onClick={() => setSelection(1)} disabled/>
+                            <Menu.Item name='Upload a File' active={selection === 1} onClick={() => setSelection(1)} />
                         </Menu>
                     </div>
                     <div className={styles.Continue}>
