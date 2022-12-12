@@ -1,61 +1,93 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import 'uikit/dist/css/uikit.min.css';
 import UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 import { Button, Container } from 'semantic-ui-react';
 import styles from '../styles/AddFiles.module.css';
 import Link from "next/link";
+import DOMPurify from 'dompurify';
 //import { useRouter } from 'next/router';
 
+function fetchData(document) {
+    const docText = sanitizeInput(document);
+    /*
+    fetch(`https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/processor/processDocument?url=`
+        + N4J_URL + `&username=` + N4J_USER + `&password=` + N4J_PASS + `&name="` + title + `"`)
+        .then((response) => response.json())
+        .then((res) => {
+            console.log(res);
+            return (getSlateJSON(res));
+        })
+        .catch((err) => {
+            console.log(err.message);
+            return (err.message);
+        });
+    */
+    return docText;
+}
+
 export default function UserUpload() {
-    const [name, setName] = useState('');
     const [title, setTitle] = useState('');
-    //const router = useRouter();
+    const [invalidTitle, setInvalidTitle] = useState(false);
+    const [userDoc, setUserDoc] = useState(false);
+    const [docText, setDocText] = useState('');
+
     UIkit.use(Icons);
-    
+
     const Name = () => {
-        return name === '' ? (<label></label>) : (<label> {name} <span uk-icon="check"></span></label>);
+        let name = userDoc.name;
+
+        if (name) {
+            return name === '' ? (<label></label>) : (<label> {name} <span uk-icon="check"></span></label>);
+        } else {
+            return (<label></label>);
+        }
     }
 
     function handleTitle(e) {
-        console.log(e.target.value);
         setTitle(e.target.value);
     }
 
     function handleChange(e) {
         const file = e.target.files[0];
-        setName(file.name);
-    }
-
-    function handleRadio(e) {
-        const checked = e.target.checked;
-
-        if (checked) {
-            setExample('block');
-        } else {
-            setExample('block');
-        }
+        setUserDoc(file);
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(e.target.value);
+        const userTitle = title.trim();
+
+        if ((userTitle.length < 1) || userTitle == null) {
+            setInvalidTitle(true);
+        } else if (docText) {
+            const txt = DOMPurify.sanitize(docText);
+            console.log(txt);
+        }
     }
+
+    useEffect(() => {
+        if (userDoc) {
+            userDoc.text().then((res) => {
+                setDocText(res);
+            });
+        }
+    });
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <div className={styles.Inner}>
-                    <div className="js-upload" style={{width: '100%', paddingBottom: '20px'}} data-uk-form-custom>
+                    <div className="js-upload" style={{ width: '100%', paddingBottom: '20px' }} data-uk-form-custom>
                         <label className="uk-form-label" style={{ display: 'block' }}>Upload a File</label>
                         <input id="upload" type="file" accept=".txt" onChange={handleChange} />
                         <button className="uk-button uk-button-default" type="button">Select</button>
                         <Name />
                     </div>
 
-                    <div style={{width: '100%'}}>
+                    <div style={{ width: '100%' }}>
                         <label className="uk-form-label">Document Title</label>
-                        <input className="uk-input" placeholder="Give the document a title" value={title} onChange={handleTitle} />
+                        <input className={'uk-input' + (invalidTitle ? 'uk-form-danger' : '')} type="text" placeholder="Give the document a title"
+                            pattern="\w+\s?" value={title} onChange={handleTitle} />
                     </div>
                 </div>
 
