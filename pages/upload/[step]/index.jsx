@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import styles from '../../../styles/Upload.module.css'
 import { useRouter } from 'next/router';
 import AddFiles from '../../../components/AddFiles';
@@ -34,6 +35,9 @@ export default function Upload() {
             </Head>
             <div className={styles.container}>
                 <div className={styles.AppTop}>
+                    <Link className={styles.backButton} href="/">
+                        <Icon name="arrow left" size='large' color='black' />
+                    </Link>
                     <img src="../logo.png" alt="logo" width="58" height="54" />
                     <div>
                         <h1 id={styles.header}>File ReSort</h1>
