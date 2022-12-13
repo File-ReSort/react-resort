@@ -1,5 +1,4 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import Link from 'next/link';
 import onKeyDown, { Element, Text, ToggleEditableButtonButton } from '../lib/inlines';
 import { initCheck, deleteIDs, getSlateJSON, updateIDs, Checkboxes } from '../lib/spacy-to-slate';
 import { withHistory } from 'slate-history';
@@ -7,9 +6,9 @@ import { Toolbar } from '../lib/slate-components';
 import { createEditor } from 'slate';
 import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
-import styles from '../styles/ViewDocument.module.css';
+import styles from '../styles/DocEditor.module.css';
 import { useRouter } from 'next/router';
-import { Button, Checkbox, Dropdown, Form, Select, ListItem } from 'semantic-ui-react';
+import { Button, Checkbox, Dropdown, Form, Select } from 'semantic-ui-react';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -38,17 +37,8 @@ const withInlines = editor => {
     return editor
 }
 
-//backup if api fetch fails
 const spacyTest = {
-    "Meta": {
-        "BucketFileLocation": "https://file-resort-storage.s3.amazonaws.com/4c01f6c4-43a8-4142-910a-a95ed1786299-example.txt",
-        "UploadDate": "",
-        "LastEditDate": "",
-        "FileName": "",
-        "ID": "4c01f6c4-43a8-4142-910a-a95ed1786299",
-        "Name": "Loading..."
-    },
-    "body": [
+    "annotations": [
         [
             "SPACY TEST FILE §1. Office of the Comptroller of the Currency\n(a) Office of the Comptroller of the Currency established\n\nThere is established in the Department of the Treasury a bureau to be known as the \"Office of the Comptroller of the Currency\" which is charged with assuring the safety and soundness of, and compliance with laws and regulations, fair access to financial services, and fair treatment of customers by, the institutions and other persons subject to its jurisdiction.\n(b) Comptroller of the Currency\n(1) In general\n\nThe chief officer of the Office of the Comptroller of the Currency shall be known as the Comptroller of the Currency. The Comptroller of the Currency shall perform the duties of the Comptroller of the Currency under the general direction of the Secretary of the Treasury. The Secretary of the Treasury may not delay or prevent the issuance of any rule or the promulgation of any regulation by the Comptroller of the Currency, and may not intervene in any matter or proceeding before the Comptroller of the Currency (including agency enforcement actions), unless otherwise specifically provided by law.\n\nThe Comptroller of the Currency is advised by the Secretary of the Treasury federal commerce",
             {
@@ -144,9 +134,9 @@ const spacyTest = {
     ]
 }
 
-export default function ShowFile() {
-    const [meta, setMeta] = useState(spacyTest.Meta);
+export default function DocEditor() {
     const [data, setData] = useState(getSlateJSON(spacyTest));
+    const [checked, setChecked] = useState(initCheck(data));
     const [rules, setRules] = useState([]);
     const router = useRouter();
     const id = router.query.id;
@@ -156,104 +146,76 @@ export default function ShowFile() {
         []
     );
     
-    //get doc data
     useEffect(() => {
         fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + id)
             .then((response) => response.json())
             .then((res) => {
-                setMeta(res.Meta);
+                console.log(res);
                 setData(getSlateJSON(res));
             })
             .catch((err) => {
                 console.log(err.message);
-                throw new Error("Could not get Document Data: " + err.message);
             });
     }, []);
+    
 
-    //get all rules 
-    useEffect(() => {
-        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/rules')
-            .then((response) => response.json())
-            .then((res) => {
-                setRules(res);
-            })
-            .catch((err) => {
-                console.log(err.message);
-                throw new Error("Could not get Rules Data: " + err.message);
-            });
-    }, []);
+    function handleChange(event) {
+        const ID = event.target.id;
+        const newChecked = checked;
+        const index = newChecked.findIndex((box) => box.value == ID);
+        newChecked[index].checked = !(newChecked[index].checked);
 
-    const Entities = () => {
+        setChecked(newChecked);
+    }
+
+    function handleDelete() {
+        const IDs = [];
+
+        checked.forEach(box => {
+            if (box.checked == true) {
+                IDs.push(box.value);
+            }
+        })
+
+        setData(deleteIDs(IDs, data));
+    }
+
+    function handleSave() {
+        const out = data[0].children;
+        const tags = [];
+
+        out.forEach((obj) => {
+            if (obj.type == "button") {
+                tags.push({
+                    tag: obj.tag,
+                    value: obj.value,
+                    text: obj.children[0].text
+                })
+            }
+        });
+
+        const tagStorage = JSON.stringify(tags);
+        window.localStorage.setItem('tagStorage', tagStorage);
+        router.push('/upload/3')
+    }
+
+    const Checkboxes = () => {
         const boxes = initCheck(data);
-        const listItems = boxes.map((box) => 
-            <li key={box.value}> 
-                {box.text} 
-            </li>
-        );
-        return (
-            <ul>
-                {listItems}
-            </ul>
-        );
-    }
-
-    const FileInfo = () => {
-        return (
-            <div className={styles.headingContainer}>
-                <div className={styles.headingCol}>
-                    <h1 className={styles.heading}>{meta.Name}</h1>
-                    
-                </div>
-                <div className={styles.headingCol}>
-                    <h3 className={styles.date}>Uploaded: {formatDate(meta.UploadDate)}</h3>
-                    <h3 className={styles.date}>Edit: {formatDate(meta.LastEditDate)}</h3>
-                    <h3 className={styles.title}>{meta.FileName}</h3>
-                </div>
-            </div>
-            
-        );
-    }
-
-    function formatDate(input) {
-        const date = new Date(input);
-        const day = date.getDate();
-        const month = date.toLocaleString('default', { month: 'short' });
-        const year = date.getFullYear();
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const ampm = hours >= 12 ? 'pm' : 'am';
-        const formattedHours = (hours % 12) || 12; 
-
-        return (
-            <span>
-                {`${month} ${day}${day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th'}, ${year}, ${formattedHours}:${minutes}${ampm}`}
-            </span>
-        );
-    }
-
-    const Rules = () => {
-        const listItems = rules.map((rule) => 
-            <li key={rule.ruleID}> 
-                { rule.Word} {rule.Rule} {rule.Relationship}
-            </li>
-        );
-        return (
-            <ul>
-                {listItems}
-            </ul>
-        );
+        return boxes.map((box) => (
+            <div><Checkbox id={box.value} key={box.value} label={box.text} onChange={handleChange} /></div>
+        ))
     }
 
     const MyEditor = () => {
         return (
             <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                 <Toolbar style={{
-                    padding: "0px",
+                    paddingTop: "10px",
+                    textAlign: "right"
                 }}>
-                    <FileInfo />
+                    <ToggleEditableButtonButton />
                 </Toolbar>
                 <Editable
-                    readOnly
                     renderElement={props => <Element {...props} />}
                     renderLeaf={props => <Text {...props} />}
                     placeholder="Enter some text..."
@@ -278,24 +240,33 @@ export default function ShowFile() {
                     <h3>Entities</h3>
 
                     <div className={styles.tagList}>
-                        <Entities />
+                        <Checkboxes />
+                    </div>
+
+                    <div style={{ display: 'flex' }}>
+                        <Button size='mini' onClick={handleDelete}>
+                            <img src="../trash3.svg" height={16} width={16} />
+                        </Button>
                     </div>
                 </div>
 
                 <div className={styles.section}>
                     <h3>Rules</h3>
-                    <div className={styles.tagList}>
-                        <Rules />
-                    </div>
+
+                    <Form size='small'>
+                        <Form.Group inline>
+                            <Form.Field><Dropdown data={[]} placeholder="Entity 1" /></Form.Field>
+                            <Form.Field><Dropdown data={[]} placeholder="Relationship" /></Form.Field>
+                            <Form.Field><Dropdown data={[]} placeholder="Entity 2" /></Form.Field>
+                            <Form.Field><Button size='small'>+</Button></Form.Field>
+                        </Form.Group>
+                    </Form>
                 </div>
 
                 <div className={styles.section}>
-                    <Link href={"/documents/" + id + "/edit"}>
-                        <Button size="large">
-                            Edit File
-                        </Button>
-                    </Link>
-                    
+                    <Button onClick={handleSave}>
+                        Save and Update
+                    </Button>
                 </div>
             </div>
         </div>

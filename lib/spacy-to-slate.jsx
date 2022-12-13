@@ -62,6 +62,7 @@ export function initCheck(data) {
             newChecked.push({ value: currentVal, checked: false, text: txt });
         }
     }));
+
     return newChecked;
 }
 

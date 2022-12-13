@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import DocumentList from '../../components/DocumentList';
 import { Button, Placeholder } from 'semantic-ui-react';
 import Navigation from '../../components/Navigation';
-import  HomeHeader from '../../components/HomeHeader'
 
 export default function documents() {
     const router = useRouter();
@@ -19,7 +18,9 @@ export default function documents() {
             <div className={styles.container}>
                     <Navigation />
                 <div className={styles.NonNav}>
-                    <HomeHeader/>
+                    <div className={styles.HomeHeader}>
+                        <h1>File ReSort</h1>
+                    </div>
 
                     <div className={styles.HomeContent}>
                         <DocumentList />
