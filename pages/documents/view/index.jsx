@@ -10,6 +10,7 @@ import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../../../styles/ViewDocument.module.css';
 import { Button } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -52,6 +53,7 @@ export default function documents() {
     });
     const [rules, setRules] = useState([]);
     const [ID, setID] = useState(-1);
+    const router = useRouter();
 
     useEffect(() => {
         if (rules.length < 1) {
@@ -122,6 +124,10 @@ export default function documents() {
                 {`${month} ${day}${day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th'}, ${year}, ${formattedHours}:${minutes}${ampm}`}
             </span>
         );
+    }
+
+    function handleClick() {
+        router.push('/upload/2');
     }
 
     const FileInfo = () => {
@@ -222,11 +228,9 @@ export default function documents() {
                             </div>
 
                             <div className={styles.section}>
-                                <Link href="/upload/2">
-                                    <Button size="large">
+                                    <Button size="large" onClick={handleClick}>
                                         Edit File
                                     </Button>
-                                </Link>
                             </div>
                         </div>
                     </div>
