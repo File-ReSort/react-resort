@@ -82,7 +82,7 @@ export default function documents() {
                         delete res.body;
                         const slate = getSlateJSON(res);
 
-                        window.localStorage.setItem('docStorage', slate);
+                        window.localStorage.setItem('docStorage', res);
                         setData({ Meta: res.Meta, annotations: slate });
                     })
                     .catch((err) => {
