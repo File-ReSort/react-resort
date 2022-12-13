@@ -3,16 +3,7 @@ import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 import { Button, Placeholder } from 'semantic-ui-react';
 import  Navigation from '../components/Navigation'
-
-const items = [
-    { title: 'Upload Files', href: '/upload/doc-editor' },
-    { title: 'Link 2', href: '#' },
-    { title: 'Link 3', href: '#' },
-].map((item, index) => (
-    <Link href={item.href} key={index}>
-        {item.title}
-    </Link>
-));
+import  HomeHeader from '../components/HomeHeader'
 
 const Home = () => {
     return (
@@ -26,20 +17,18 @@ const Home = () => {
                 <Navigation />
 
                 <div className={styles.NonNav}>
-                    <div className={styles.HomeHeader}>
-                        <h1>File ReSort</h1>
-                    </div>
+                    
+                    <HomeHeader />
 
                     <div className={styles.HomeContent}>
-                        <div>No files yet!</div>
 
                         <Link href="/upload/1">
-                            <Button primary>
-                                Get Started
+                            <Button size='huge' primary>
+                                Upload A file
                             </Button>
                         </Link>
                         <Link href="/documents">
-                            <Button primary>
+                            <Button size='huge' primary>
                                 View files
                             </Button>
                         </Link>

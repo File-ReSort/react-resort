@@ -6,9 +6,6 @@ import ShowFile from '../../../components/ShowFile';
 
 
 export default function documents() {
-    const router = useRouter();
-    
-
     return (
         <div>
             <Head>
@@ -17,11 +14,13 @@ export default function documents() {
             </Head>
             <div className={styles.container}>
                 <div className={styles.AppTop}>
-                    <img src="../logo.png" alt="logo" width="58" height="54" />
+                    <Link href={"/"} style={{display: "flex"}}>
+                        <img src="../logo.png" alt="logo" width="58" height="54" />
                     <div>
                         <h1 id={styles.header}>File ReSort</h1>
                         <span id={styles.caption}>View document</span>
                     </div>
+                    </Link>
                 </div>
 
                 <div className={styles.Content}>
