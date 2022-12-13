@@ -161,7 +161,7 @@ export default function documents() {
         );
 
         return (
-            <SlateReact.Slate editor={editor} value={data.annotations} onChange={(value) => setData(data.Meta, value)}>
+            <SlateReact.Slate editor={editor} value={data.annotations}>
                 <Toolbar style={{
                     padding: "0px",
                 }}>
