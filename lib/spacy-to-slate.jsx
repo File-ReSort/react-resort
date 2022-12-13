@@ -58,8 +58,6 @@ export function initCheck(data) {
             newChecked.push({ value: currentVal, checked: false, text: txt });
         }
     }));
-
-    console.log(newChecked);
     return newChecked;
 }
 

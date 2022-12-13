@@ -1,15 +1,10 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import styles from '../../styles/Documents.module.css'
-import { useRouter } from 'next/router';
-import DocumentList from '../../components/DocumentList';
-import { Button, Placeholder } from 'semantic-ui-react';
+import RulesList from '../../components/RulesList';
 import Navigation from '../../components/Navigation';
 import  HomeHeader from '../../components/HomeHeader'
 
 export default function documents() {
-    const router = useRouter();
-
     return (
         <div>
             <Head>
@@ -19,10 +14,10 @@ export default function documents() {
             <div className={styles.container}>
                     <Navigation />
                 <div className={styles.NonNav}>
-                    <HomeHeader/>
+                    <HomeHeader />
 
                     <div className={styles.HomeContent}>
-                        <DocumentList />
+                        <RulesList />
                     </div>
 
                 </div>

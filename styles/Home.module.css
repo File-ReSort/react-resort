@@ -11,15 +11,20 @@
 .HomeContent {
 	display: flex;
 	gap: 20px;
+	flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
 	justify-content: center;
 	align-items: center;
-	padding: 20px;
+	padding: 3rem;
 }
 
 .HomeHeader {
 	display: flex;
 	padding: 20px;
 	border-bottom: 2px solid #000000;
+	align-items: flex-end;
 }
 
 .HomeNav {
@@ -28,8 +33,32 @@
 	width: 40%;
 	max-width: 480px;
 	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	
 }
 
 .NonNav {
 	width: 100%;
+}
+
+.navItem {
+	margin-top: 5rem;
+}
+
+.title {
+	padding-left: 1rem;
+}
+
+.logoLink {
+	text-decoration: none;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+.logoLink:hover {
+	text-decoration: none;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
 }

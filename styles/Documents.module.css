@@ -4,14 +4,13 @@
 }
 
 .title {
-	font-family: 'Wellfleet';
+	padding-top: 3rem;
+	padding-left: 0rem;
 	font-size: 30px;
 }
 
 .HomeContent {
-	display: flex;
 	gap: 20px;
-	justify-content: center;
 	align-items: center;
 	padding: 20px;
 }
@@ -32,4 +31,38 @@
 
 .NonNav {
 	width: 100%;
+}
+
+.table {
+	width: 100%;
+	padding: 0px;
+	border-color: #000000;
+}
+
+.tableHeader {
+	padding: 8px;
+	text-align: left;
+	font-size: 1.2rem;
+}
+
+.tableRow {
+	padding-bottom: 1rem;
+}
+
+.tableRow:nth-child(even) {
+	background-color: #dddddd5d;
+  }
+
+.tableCell {
+	vertical-align: middle;
+	padding-bottom: 0.5rem;
+	padding-top: 0.2rem;
+	padding-left: 0.5rem;
+}
+
+
+.link {
+	text-decoration: none;
+	font-size: 1.2rem;
+	padding-right: 5rem;
 }
