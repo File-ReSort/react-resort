@@ -38,15 +38,7 @@ const withInlines = editor => {
 }
 
 const spacyTest = {
-    "Meta": {
-        "BucketFileLocation": "https://file-resort-storage.s3.amazonaws.com/4c01f6c4-43a8-4142-910a-a95ed1786299-example.txt",
-        "UploadDate": "Tue Nov 29 18:37:07 2022",
-        "LastEditDate": "Tue Nov 29 18:37:07 2022",
-        "FileName": "example.txt",
-        "ID": "4c01f6c4-43a8-4142-910a-a95ed1786299",
-        "Name": "SPACY TEST FILE"
-    },
-    "body": [
+    "annotations": [
         [
             "SPACY TEST FILE §1. Office of the Comptroller of the Currency\n(a) Office of the Comptroller of the Currency established\n\nThere is established in the Department of the Treasury a bureau to be known as the \"Office of the Comptroller of the Currency\" which is charged with assuring the safety and soundness of, and compliance with laws and regulations, fair access to financial services, and fair treatment of customers by, the institutions and other persons subject to its jurisdiction.\n(b) Comptroller of the Currency\n(1) In general\n\nThe chief officer of the Office of the Comptroller of the Currency shall be known as the Comptroller of the Currency. The Comptroller of the Currency shall perform the duties of the Comptroller of the Currency under the general direction of the Secretary of the Treasury. The Secretary of the Treasury may not delay or prevent the issuance of any rule or the promulgation of any regulation by the Comptroller of the Currency, and may not intervene in any matter or proceeding before the Comptroller of the Currency (including agency enforcement actions), unless otherwise specifically provided by law.\n\nThe Comptroller of the Currency is advised by the Secretary of the Treasury federal commerce",
             {
