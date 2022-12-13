@@ -148,34 +148,36 @@ export default function ShowFile() {
     const [meta, setMeta] = useState(spacyTest.Meta);
     const [data, setData] = useState(getSlateJSON(spacyTest));
     const [rules, setRules] = useState([]);
-    const router = useRouter();
-    const id = router.query.id;
-    
-    const editor = useMemo(
-        () => withInlines(withHistory(withReact(createEditor()))),
-        []
-    );
-    
+    let id = -1;
+
     //get doc data
     useEffect(() => {
-        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + id)
-            .then((response) => response.json())
-            .then((res) => {
-                //change from body to annotations
-                Object.defineProperty(res, 'annotations', {
-                    value: res.body,
-                    enumerable: true,
-                    writable: true,
-                  });
-                  delete res.body;
-                console.log(res);
-                setMeta(res.Meta);
-                setData(getSlateJSON(res));
-            })
-            .catch((err) => {
-                console.log(err.message);
-                throw new Error("Could not get Document Data: " + err.message);
-            });
+        if (id === -1) {
+            if (typeof window !== undefined) {
+                id = window.localStorage.getItem('currentID');
+            }
+        } else {
+            fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + id)
+                .then((response) => response.json())
+                .then((res) => {
+                    //change from body to annotations
+                    Object.defineProperty(res, 'annotations', {
+                        value: res.body,
+                        enumerable: true,
+                        writable: true,
+                    });
+                    delete res.body;
+                    const slate = getSlateJSON(res);
+
+                    window.localStorage.setItem('docStorage', slate);
+                    setData(slate);
+                    setMeta(res.Meta);
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                    throw new Error("Could not get Document Data: " + err.message);
+                });
+        }
     }, []);
 
     //get all rules 
@@ -253,6 +255,11 @@ export default function ShowFile() {
     }
 
     const MyEditor = () => {
+        const editor = useMemo(
+            () => withInlines(withHistory(withReact(createEditor()))),
+            []
+        );
+        
         return (
             <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                 <Toolbar style={{
@@ -298,12 +305,11 @@ export default function ShowFile() {
                 </div>
 
                 <div className={styles.section}>
-                    <Link href={"/documents/" + id + "/edit"}>
+                    <Link href="/upload/2">
                         <Button size="large">
                             Edit File
                         </Button>
                     </Link>
-                    
                 </div>
             </div>
         </div>
