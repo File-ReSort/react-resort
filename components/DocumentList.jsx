@@ -5,7 +5,7 @@ import styles from '../styles/Documents.module.css';
 const DocumentList = () => {
     const [documents, setDocuments] = useState([]);
   
-    useEffect(() => {
+    function fetchData() {
       // Fetch the list of documents from the API
       fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/documents')
         .then(response => response.json())
