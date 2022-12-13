@@ -9,7 +9,7 @@ import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../styles/ViewDocument.module.css';
 import { useRouter } from 'next/router';
-import { Button, Checkbox, Dropdown, Form, Select, ListItem } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -145,59 +145,59 @@ const spacyTest = {
 }
 
 export default function ShowFile() {
-    const [meta, setMeta] = useState(spacyTest.Meta);
-    const [data, setData] = useState(getSlateJSON(spacyTest));
+    const [meta, setMeta] = useState({});
+    const [data, setData] = useState([]);
     const [rules, setRules] = useState([]);
-    let id = -1;
+    const [ID, setID] = useState(-1);
 
-    //get doc data
     useEffect(() => {
-        if (id === -1) {
-            if (typeof window !== undefined) {
-                id = window.localStorage.getItem('currentID');
-            }
-        } else {
-            fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + id)
+        if (rules.length < 1) {
+            fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/rules')
                 .then((response) => response.json())
                 .then((res) => {
-                    //change from body to annotations
-                    Object.defineProperty(res, 'annotations', {
-                        value: res.body,
-                        enumerable: true,
-                        writable: true,
-                    });
-                    delete res.body;
-                    const slate = getSlateJSON(res);
-
-                    window.localStorage.setItem('docStorage', slate);
-                    setData(slate);
-                    setMeta(res.Meta);
+                    setRules(res);
                 })
                 .catch((err) => {
                     console.log(err.message);
-                    throw new Error("Could not get Document Data: " + err.message);
+                    throw new Error("Could not get Rules Data: " + err.message);
                 });
-        }
-    }, []);
+        } else if (ID === -1) {
+            const current = window.localStorage.getItem('currentID');
+            setID(current);
+        } else {
+            if (data.length < 1) {
+                console.log(ID);
+                fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + ID)
+                    .then((response) => response.json())
+                    .then((res) => {
+                        //change from body to annotations
+                        Object.defineProperty(res, 'annotations', {
+                            value: res.body,
+                            enumerable: true,
+                            writable: true,
+                        });
+                        delete res.body;
 
-    //get all rules 
-    useEffect(() => {
-        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/rules')
-            .then((response) => response.json())
-            .then((res) => {
-                setRules(res);
-            })
-            .catch((err) => {
-                console.log(err.message);
-                throw new Error("Could not get Rules Data: " + err.message);
-            });
-    }, []);
+                        window.localStorage.setItem('docStorage', res);
+                        const slate = getSlateJSON(res);
+                        setData(slate);
+                    })
+                    .catch((err) => {
+                        console.log(err.message);
+                        throw new Error("Could not get Document Data: " + err.message);
+                });
+            }
+            
+            console.log(data["Meta"]);
+            setMeta(data["Meta"]);
+        }
+    });
 
     const Entities = () => {
         const boxes = initCheck(data);
-        const listItems = boxes.map((box) => 
-            <li key={box.value}> 
-                {box.text} 
+        const listItems = boxes.map((box) =>
+            <li key={box.value}>
+                {box.text}
             </li>
         );
         return (
@@ -212,7 +212,7 @@ export default function ShowFile() {
             <div className={styles.headingContainer}>
                 <div className={styles.headingCol}>
                     <h1 className={styles.heading}>{meta.Name}</h1>
-                    
+
                 </div>
                 <div className={styles.headingCol}>
                     <h3 className={styles.date}>Uploaded: {formatDate(meta.UploadDate)}</h3>
@@ -220,7 +220,7 @@ export default function ShowFile() {
                     <h3 className={styles.title}>{meta.FileName}</h3>
                 </div>
             </div>
-            
+
         );
     }
 
@@ -232,7 +232,7 @@ export default function ShowFile() {
         const hours = date.getHours();
         const minutes = date.getMinutes();
         const ampm = hours >= 12 ? 'pm' : 'am';
-        const formattedHours = (hours % 12) || 12; 
+        const formattedHours = (hours % 12) || 12;
 
         return (
             <span>
@@ -242,9 +242,9 @@ export default function ShowFile() {
     }
 
     const Rules = () => {
-        const listItems = rules.map((rule) => 
-            <li key={rule.ruleID}> 
-                { rule.Word} {rule.Rule} {rule.Relationship}
+        const listItems = rules.map((rule) =>
+            <li key={rule.ruleID}>
+                {rule.Word} {rule.Rule} {rule.Relationship}
             </li>
         );
         return (
@@ -259,7 +259,7 @@ export default function ShowFile() {
             () => withInlines(withHistory(withReact(createEditor()))),
             []
         );
-        
+
         return (
             <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                 <Toolbar style={{
