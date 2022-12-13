@@ -149,8 +149,12 @@ export default function ShowFile() {
     const [data, setData] = useState(getSlateJSON(spacyTest));
     const [rules, setRules] = useState([]);
     const router = useRouter();
-    const id = router.query.id;
-    
+    let id = -1;
+    if (typeof window !== "undefined") {
+        id = (typeof router.query.id !== 'undefined' ? router.query.id : window.localStorage.getItem('id'));
+        window.localStorage.setItem('id', id);
+    }
+    //window.localStorage.setItem('id', id);
     const editor = useMemo(
         () => withInlines(withHistory(withReact(createEditor()))),
         []
@@ -290,7 +294,7 @@ export default function ShowFile() {
                 </div>
 
                 <div className={styles.section}>
-                    <Link href={"/documents/" + id + "/edit"}>
+                    <Link href={"#"}>
                         <Button size="large">
                             Edit File
                         </Button>
