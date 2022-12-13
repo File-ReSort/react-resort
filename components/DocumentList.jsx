@@ -5,31 +5,13 @@ import styles from '../styles/Documents.module.css';
 const DocumentList = () => {
     const [documents, setDocuments] = useState([]);
   
-    function fetchData() {
+    useEffect(() => {
       // Fetch the list of documents from the API
       fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/documents')
         .then(response => response.json())
         .then(data => {
           console.log(data);
           setDocuments(data);
-<<<<<<< HEAD
-      });
-    }
-
-    const Docs = () => {
-      fetchData();
-
-      if (documents) {
-        return documents.map(document => (
-          <li className="list" key={document.ID}>
-            <Link href={`/documents/${document.ID}`}>{document.Name}</Link>
-          </li>
-        ));
-      } else {
-        return (<li>Loading...</li>);
-      }
-    }
-=======
         });
     }, []);
 
@@ -72,23 +54,16 @@ const DocumentList = () => {
         </table>
     )
   }
->>>>>>> fixevan
   
     return (
       <div className={styles.Inner}>
         <h1 className={styles.title}>All files:</h1>
 
-<<<<<<< HEAD
-          <ul className="list">
-            <Docs />
-          </ul>
-=======
         {documents ? (
           <Table/>
         ) : (
           <div>Loading...</div>
         )}
->>>>>>> fixevan
       </div>
     );
   };
