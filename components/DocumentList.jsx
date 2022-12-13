@@ -10,6 +10,7 @@ const DocumentList = () => {
       fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/documents')
         .then(response => response.json())
         .then(data => {
+          console.log(data);
           setDocuments(data);
         });
     }, []);
@@ -56,7 +57,7 @@ const DocumentList = () => {
   
     return (
       <div className={styles.Inner}>
-          <h3 className={styles.Title}>All files:</h3>
+        <h1 className={styles.title}>All files:</h1>
 
         {documents ? (
           <Table/>
@@ -64,7 +65,6 @@ const DocumentList = () => {
           <div>Loading...</div>
         )}
       </div>
-      
     );
   };
   
