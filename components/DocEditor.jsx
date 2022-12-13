@@ -28,10 +28,10 @@ const withInlines = editor => {
 }
 
 export default function DocEditor() {
-    const spacy = window.localStorage.getItem('tagStorage');
+    const spacy = window.localStorage.getItem('docStorage');
     const [data, setData] = useState(getSlateJSON(JSON.parse(spacy)));
     const [checked, setChecked] = useState(initCheck(data));
-    const [rules, setRules] = useState([]);
+    //const [rules, setRules] = useState([]);
     const router = useRouter();
 
     function handleChange(event) {
@@ -80,10 +80,6 @@ export default function DocEditor() {
         return boxes.map((box) => (
             <div><Checkbox id={box.value} key={box.value} label={box.text} onChange={handleChange} /></div>
         ))
-    }
-
-    function handleEditor() {
-        setEditor(() => withInlines(withHistory(withReact(createEditor()))), []);
     }
 
     const MyEditor = () => {

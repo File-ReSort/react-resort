@@ -11,8 +11,9 @@ import { useRouter } from 'next/router';
 export default function UserUpload() {
     const [title, setTitle] = useState('');
     const [invalidTitle, setInvalidTitle] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [userDoc, setUserDoc] = useState(false);
-    const [docText, setDocText] = useState('');
+    const [invalidDoc, setInvalidDoc] = useState(false);
 
     const router = useRouter();
     UIkit.use(Icons);
@@ -38,7 +39,6 @@ export default function UserUpload() {
 
     function handleSubmit(e) {
         e.preventDefault();
-        const userTitle = title.trim();
         var formdata = new FormData();
         var requestOptions =
         {
@@ -47,7 +47,9 @@ export default function UserUpload() {
             redirect: 'follow'
         };
 
-        if ((userTitle.length < 1)) {
+        const val = title.trim();
+
+        if (val < 2 || val > 20) {
             setInvalidTitle(true);
         } else {
             if (userDoc) {
@@ -56,17 +58,29 @@ export default function UserUpload() {
                 fetch("https://fileresortproc.ngrok.io/processor/getAnnotations", requestOptions)
                     .then(response => response.text())
                     .then(result => {
-                        (window.localStorage.setItem('tagStorage', result))
+                        window.localStorage.setItem('docStorage', result);
                         router.push('/upload/2');
                     })
-                    .catch(error => console.log('error', error));
-            }
+                    .catch(error => {
+                        console.log('error', error);
+                    });
 
-            setInvalidTitle(false);
+                setLoading(true);
+            } else {
+                setInvalidDoc(true);
+            }
         }
     }
 
-
+    if (loading) {
+        return (
+            <div>
+                <div className={styles.Inner}>
+                    Loading...
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
@@ -75,14 +89,14 @@ export default function UserUpload() {
                     <div className="js-upload" style={{ width: '100%', paddingBottom: '20px' }} data-uk-form-custom>
                         <label className="uk-form-label" style={{ display: 'block' }}>Upload a File</label>
                         <input id="upload" type="file" accept=".txt" onChange={handleChange} />
-                        <button className="uk-button uk-button-default" type="button">Select</button>
+                        <button className={'uk-button' + (invalidDoc ? ' uk-button-danger' : ' uk-button-default')} type="button">Select</button>
                         <Name />
                     </div>
-
+                    
                     <div style={{ width: '100%' }}>
                         <label className="uk-form-label">Document Title</label>
-                        <input className={'uk-input' + (invalidTitle ? 'uk-form-danger' : '')} type="text" placeholder="Give the document a title"
-                            pattern="\w+\s?" value={title} onChange={handleTitle} />
+                        <input className={'uk-input' + ((invalidTitle && (title.length < 1)) ? ' uk-form-danger' : '')} type="text" placeholder="Give the document a title"
+                            pattern="\s?([\w\d]+[\s]?)+" value={title} onChange={handleTitle} />
                     </div>
                 </div>
 

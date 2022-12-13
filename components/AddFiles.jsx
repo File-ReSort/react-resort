@@ -111,7 +111,7 @@ export default function AddFiles() {
         if (selection === 1) {
             doNavigation(1);
         } else {
-            window.localStorage.setItem('tagStorage', JSON.stringify(spacyExample));
+            window.localStorage.setItem('docStorage', JSON.stringify(spacyExample));
             router2.push('/upload/2');
         }
     }
