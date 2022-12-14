@@ -228,7 +228,7 @@ export default function documents() {
                             </div>
 
                             <div className={styles.section}>
-                                    <Button size="large" onClick={handleClick}>
+                                    <Button size="large" disabled>
                                         Edit File
                                     </Button>
                             </div>

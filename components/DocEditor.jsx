@@ -29,7 +29,7 @@ const withInlines = editor => {
 
 export default function DocEditor() {
     const spacy = window.localStorage.getItem('docStorage');
-    const [data, setData] = useState(getSlateJSON(spacy));
+    const [data, setData] = useState(getSlateJSON(JSON.parse(spacy)));
     const [checked, setChecked] = useState(initCheck(data));
     //const [rules, setRules] = useState([]);
     const router = useRouter();

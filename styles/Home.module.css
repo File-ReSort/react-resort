@@ -5,7 +5,7 @@
 
 .title {
 	font-family: 'Wellfleet';
-	font-size: 30px;
+	font-size: 36px;
 }
 
 .HomeContent {
@@ -22,9 +22,17 @@
 
 .HomeHeader {
 	display: flex;
-	padding: 20px;
+	padding-left: 40px;
+	padding-bottom: 20px;
 	border-bottom: 2px solid #000000;
 	align-items: flex-end;
+}
+
+.flex {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	padding: 0 4px;
 }
 
 .HomeNav {
@@ -35,7 +43,6 @@
 	padding: 20px;
 	display: flex;
 	flex-direction: column;
-	
 }
 
 .NonNav {
@@ -56,6 +63,7 @@
 	flex-direction: row;
 	align-items: flex-end;
 }
+
 .logoLink:hover {
 	text-decoration: none;
 	display: flex;

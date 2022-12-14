@@ -67,8 +67,6 @@ const DocumentList = () => {
   
     return (
       <div className={styles.Inner}>
-        <h1 className={styles.title}>All files:</h1>
-
         {documents ? (
           <Table/>
         ) : (

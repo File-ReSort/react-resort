@@ -1,37 +1,3 @@
-.container {
-	display: flex;
-	height: 100vh;
-}
-
-.title {
-	padding-top: 3rem;
-	padding-left: 0rem;
-	font-size: 30px;
-}
-
-.HomeContent {
-	gap: 20px;
-	align-items: center;
-	padding: 20px;
-}
-
-.HomeHeader {
-	display: flex;
-	padding: 20px;
-	border-bottom: 2px solid #000000;
-}
-
-.HomeNav {
-	border-right: 2px solid #000000;
-	height: 100%;
-	width: 40%;
-	max-width: 480px;
-	padding: 20px;
-}
-
-.NonNav {
-	width: 100%;
-}
 
 .table {
 	width: 100%;
@@ -55,14 +21,12 @@
 
 .tableCell {
 	vertical-align: middle;
-	padding-bottom: 0.5rem;
-	padding-top: 0.2rem;
-	padding-left: 0.5rem;
+	padding: 0.4rem 1rem;
 }
 
 
 .link {
 	text-decoration: none;
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	padding-right: 5rem;
 }
