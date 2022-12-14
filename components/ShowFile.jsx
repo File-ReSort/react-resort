@@ -9,7 +9,7 @@ import { Editable, withReact } from 'slate-react';
 import * as SlateReact from 'slate-react';
 import styles from '../styles/ViewDocument.module.css';
 import { useRouter } from 'next/router';
-import { Button } from 'semantic-ui-react';
+import { Button, Checkbox, Dropdown, Form, Select, ListItem } from 'semantic-ui-react';
 
 const withInlines = editor => {
     const { insertData, insertText, isInline } = editor
@@ -48,7 +48,7 @@ const spacyTest = {
         "ID": "4c01f6c4-43a8-4142-910a-a95ed1786299",
         "Name": "Loading..."
     },
-    "annotations": [
+    "body": [
         [
             "SPACY TEST FILE §1. Office of the Comptroller of the Currency\n(a) Office of the Comptroller of the Currency established\n\nThere is established in the Department of the Treasury a bureau to be known as the \"Office of the Comptroller of the Currency\" which is charged with assuring the safety and soundness of, and compliance with laws and regulations, fair access to financial services, and fair treatment of customers by, the institutions and other persons subject to its jurisdiction.\n(b) Comptroller of the Currency\n(1) In general\n\nThe chief officer of the Office of the Comptroller of the Currency shall be known as the Comptroller of the Currency. The Comptroller of the Currency shall perform the duties of the Comptroller of the Currency under the general direction of the Secretary of the Treasury. The Secretary of the Treasury may not delay or prevent the issuance of any rule or the promulgation of any regulation by the Comptroller of the Currency, and may not intervene in any matter or proceeding before the Comptroller of the Currency (including agency enforcement actions), unless otherwise specifically provided by law.\n\nThe Comptroller of the Currency is advised by the Secretary of the Treasury federal commerce",
             {
@@ -145,59 +145,53 @@ const spacyTest = {
 }
 
 export default function ShowFile() {
-    const [meta, setMeta] = useState({});
-    const [data, setData] = useState([]);
+    const [meta, setMeta] = useState(spacyTest.Meta);
+    const [data, setData] = useState(getSlateJSON(spacyTest));
     const [rules, setRules] = useState([]);
-    const [ID, setID] = useState(-1);
-
+    const router = useRouter();
+    let id = -1;
+    if (typeof window !== "undefined") {
+        id = (typeof router.query.id !== 'undefined' ? router.query.id : window.localStorage.getItem('id'));
+        window.localStorage.setItem('id', id);
+    }
+    //window.localStorage.setItem('id', id);
+    const editor = useMemo(
+        () => withInlines(withHistory(withReact(createEditor()))),
+        []
+    );
+    
+    //get doc data
     useEffect(() => {
-        if (rules.length < 1) {
-            fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/rules')
-                .then((response) => response.json())
-                .then((res) => {
-                    setRules(res);
-                })
-                .catch((err) => {
-                    console.log(err.message);
-                    throw new Error("Could not get Rules Data: " + err.message);
-                });
-        } else if (ID === -1) {
-            const current = window.localStorage.getItem('currentID');
-            setID(current);
-        } else {
-            if (data.length < 1) {
-                console.log(ID);
-                fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + ID)
-                    .then((response) => response.json())
-                    .then((res) => {
-                        //change from body to annotations
-                        Object.defineProperty(res, 'annotations', {
-                            value: res.body,
-                            enumerable: true,
-                            writable: true,
-                        });
-                        delete res.body;
+        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/document?ID=' + id)
+            .then((response) => response.json())
+            .then((res) => {
+                setMeta(res.Meta);
+                setData(getSlateJSON(res));
+            })
+            .catch((err) => {
+                console.log(err.message);
+                throw new Error("Could not get Document Data: " + err.message);
+            });
+    }, []);
 
-                        window.localStorage.setItem('docStorage', res);
-                        const slate = getSlateJSON(res);
-                        setData(slate);
-                    })
-                    .catch((err) => {
-                        console.log(err.message);
-                        throw new Error("Could not get Document Data: " + err.message);
-                });
-            }
-            
-            console.log(data["Meta"]);
-            setMeta(data["Meta"]);
-        }
-    });
+    //get all rules 
+    useEffect(() => {
+        fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/rules')
+            .then((response) => response.json())
+            .then((res) => {
+                setRules(res);
+            })
+            .catch((err) => {
+                console.log(err.message);
+                throw new Error("Could not get Rules Data: " + err.message);
+            });
+    }, []);
 
     const Entities = () => {
         const boxes = initCheck(data);
-        const listItems = boxes.map((box) =>
-            <li key={box.value}>
-                {box.text}
+        const listItems = boxes.map((box) => 
+            <li key={box.value}> 
+                {box.text} 
             </li>
         );
         return (
@@ -212,7 +206,7 @@ export default function ShowFile() {
             <div className={styles.headingContainer}>
                 <div className={styles.headingCol}>
                     <h1 className={styles.heading}>{meta.Name}</h1>
-
+                    
                 </div>
                 <div className={styles.headingCol}>
                     <h3 className={styles.date}>Uploaded: {formatDate(meta.UploadDate)}</h3>
@@ -220,7 +214,7 @@ export default function ShowFile() {
                     <h3 className={styles.title}>{meta.FileName}</h3>
                 </div>
             </div>
-
+            
         );
     }
 
@@ -232,7 +226,7 @@ export default function ShowFile() {
         const hours = date.getHours();
         const minutes = date.getMinutes();
         const ampm = hours >= 12 ? 'pm' : 'am';
-        const formattedHours = (hours % 12) || 12;
+        const formattedHours = (hours % 12) || 12; 
 
         return (
             <span>
@@ -242,9 +236,9 @@ export default function ShowFile() {
     }
 
     const Rules = () => {
-        const listItems = rules.map((rule) =>
-            <li key={rule.ruleID}>
-                {rule.Word} {rule.Rule} {rule.Relationship}
+        const listItems = rules.map((rule) => 
+            <li key={rule.ruleID}> 
+                { rule.Word} {rule.Rule} {rule.Relationship}
             </li>
         );
         return (
@@ -255,11 +249,6 @@ export default function ShowFile() {
     }
 
     const MyEditor = () => {
-        const editor = useMemo(
-            () => withInlines(withHistory(withReact(createEditor()))),
-            []
-        );
-
         return (
             <SlateReact.Slate editor={editor} value={data} onChange={setData}>
                 <Toolbar style={{
@@ -305,11 +294,12 @@ export default function ShowFile() {
                 </div>
 
                 <div className={styles.section}>
-                    <Link href="/upload/2">
+                    <Link href={"#"}>
                         <Button size="large">
                             Edit File
                         </Button>
                     </Link>
+                    
                 </div>
             </div>
         </div>
