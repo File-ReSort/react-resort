@@ -4,7 +4,7 @@ export const UUID = () => uuidv4();
 
 export function getSlateJSON(spacy) {
     const out = spacy["annotations"];
-
+    console.log(out);
     const blocks = out.map(item => {
         const block = {
             type: 'paragraph',

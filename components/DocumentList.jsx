@@ -1,19 +1,29 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import styles from '../styles/Documents.module.css';
 
 const DocumentList = () => {
     const [documents, setDocuments] = useState([]);
-  
-    function fetchData() {
+    const router = useRouter();
+
+    useEffect(() => {
       // Fetch the list of documents from the API
       fetch('https://cr8qhi8bu6.execute-api.us-east-1.amazonaws.com/prod/documents')
         .then(response => response.json())
         .then(data => {
-          console.log(data);
+          //console.log(data);
           setDocuments(data);
         });
     }, []);
+
+    function handleClick(e) {
+      e.preventDefault();
+      const id = e.target.id;
+      
+      window.localStorage.setItem('currentID', id);
+      
+      router.push('/documents/view');
+    }
 
     function formatDate(input) {
       const date = new Date(input);
@@ -26,7 +36,7 @@ const DocumentList = () => {
               {`${month} ${day}${day === 1 ? 'st' : day === 2 ? 'nd' : day === 3 ? 'rd' : 'th'}, ${year}`}
           </span>
       );
-  }
+    }
 
   const Table = () => {
     return (
@@ -43,7 +53,7 @@ const DocumentList = () => {
             {documents.map(document => (
               <tr className={styles.tableRow} key={document.ID}>
                 <td className={styles.tableCell}>
-                  <Link className={styles.link} href={`/documents/${document.ID}`}>{document.Name}</Link>
+                  <a className={styles.link} id={document.ID} href='#' onClick={handleClick}>{document.Name}</a>
                 </td>
                 <td className={styles.tableCell}>{document.FileName}</td>
                 <td className={styles.tableCell}>{formatDate(document.UploadDate)}</td>
